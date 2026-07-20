@@ -1,0 +1,15 @@
+GRIMOIRE — VINTAGE WALLPAPER + LIQUID GLASS
+
+Implemented directly in the full project:
+- real dark floral wallpaper background
+- Liquid Glass only on interface panels
+- more transparent Home surfaces
+- explicit readable dark text colors
+- Journal without lines or margin marks
+- calmer header
+- existing application logic unchanged
+
+Primary changed files:
+- styles/rooms/hearth/hearth-atmosphere.css
+- assets/hearth/hearth-floral-wallpaper.jpg
+- index.html (cache key only)

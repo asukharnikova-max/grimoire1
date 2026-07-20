@@ -1,0 +1,366 @@
+/* ---------------------------------
+   NAVIGATION
+   Cozy dropdown panel
+---------------------------------- */
+
+.home-header {
+  position: relative;
+}
+
+.navigation-button {
+  position: absolute;
+  z-index: 40;
+  top: 0;
+  left: 0;
+
+  display: grid;
+  place-items: center;
+
+  width: 50px;
+  height: 50px;
+  padding: 0;
+
+  border: 1px solid var(--line-strong);
+  border-radius: 16px;
+
+  color: var(--sage-dark);
+  background: rgba(255, 252, 246, 0.9);
+
+  box-shadow:
+    0 10px 24px rgba(76, 60, 47, 0.1);
+
+  font-size: 1.15rem;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.navigation-button:hover,
+.navigation-button:focus-visible,
+.navigation-button[aria-expanded="true"] {
+  transform: translateY(-1px);
+
+  border-color: rgba(115, 130, 102, 0.42);
+
+  background: var(--surface-strong);
+
+  box-shadow:
+    0 14px 30px rgba(76, 60, 47, 0.14);
+}
+
+.navigation-menu[hidden] {
+  display: none;
+}
+
+.navigation-menu {
+  position: absolute;
+  z-index: 35;
+  top: 60px;
+  left: 0;
+
+  display: grid;
+  gap: 4px;
+
+  width: min(260px, calc(100vw - 40px));
+  padding: 12px;
+
+  border: 1px solid var(--line);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      155deg,
+      rgba(255, 252, 246, 0.98),
+      rgba(244, 238, 228, 0.97)
+    );
+
+  box-shadow:
+    0 24px 58px rgba(69, 55, 44, 0.18);
+
+  backdrop-filter: blur(16px);
+
+  transform-origin: top left;
+  animation:
+    navigation-open 170ms ease-out;
+}
+
+.navigation-menu a {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-height: 46px;
+  padding: 10px 13px;
+
+  border-radius: 13px;
+
+  color: var(--text);
+  text-decoration: none;
+
+  font-size: 0.91rem;
+  font-weight: 650;
+  line-height: 1.25;
+
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease;
+}
+
+.navigation-menu a:hover,
+.navigation-menu a:focus-visible {
+  transform: translateX(2px);
+
+  color: var(--sage-dark);
+  background: rgba(223, 229, 216, 0.68);
+
+  outline: none;
+}
+
+.navigation-menu a:first-child {
+  color: var(--sage-dark);
+  background: rgba(223, 229, 216, 0.56);
+}
+
+.navigation-menu::after {
+  display: block;
+
+  margin: 7px 5px 2px;
+  padding-top: 12px;
+
+  border-top: 1px solid var(--line);
+
+  color: var(--text-faint);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 0.78rem;
+  font-style: italic;
+  line-height: 1.45;
+
+  content:
+    "More rooms will open with time. ✦";
+}
+
+.home-heading {
+  margin-left: 72px;
+}
+
+@keyframes navigation-open {
+  from {
+    opacity: 0;
+    transform:
+      translateY(-7px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+@media (max-width: 680px) {
+  .navigation-button {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 15px;
+  }
+
+  .navigation-menu {
+    top: 55px;
+
+    width: min(
+      250px,
+      calc(100vw - 24px)
+    );
+  }
+
+  .home-heading {
+    margin-left: 60px;
+  }
+}
+
+/* ---------------------------------
+   LIQUID GLASS NAVIGATION FIX
+   Keep the dropdown above every blurred panel.
+---------------------------------- */
+
+.home-header {
+  z-index: 200;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.navigation-button {
+  z-index: 220;
+
+  border-color: rgba(255, 255, 255, 0.42);
+
+  color: #352c31;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 252, 246, 0.64),
+      rgba(220, 204, 209, 0.42)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    0 12px 28px rgba(26, 18, 20, 0.18);
+
+  backdrop-filter: blur(20px) saturate(130%);
+  -webkit-backdrop-filter: blur(20px) saturate(130%);
+}
+
+.navigation-menu {
+  z-index: 210;
+  top: 62px;
+  left: 0;
+
+  width: min(270px, calc(100vw - 48px));
+  max-height: min(520px, calc(100vh - 96px));
+  padding: 10px;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  border-color: rgba(255, 255, 255, 0.42);
+  border-radius: 22px;
+
+  color: #30292d;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 249, 239, 0.76),
+      rgba(222, 207, 210, 0.62)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.78),
+    0 24px 54px rgba(20, 14, 16, 0.28);
+
+  backdrop-filter: blur(30px) saturate(140%);
+  -webkit-backdrop-filter: blur(30px) saturate(140%);
+}
+
+.navigation-menu a {
+  color: #30292d;
+}
+
+.navigation-menu a:hover,
+.navigation-menu a:focus-visible,
+.navigation-menu a:first-child {
+  color: #3f513c;
+  background: rgba(225, 235, 218, 0.58);
+}
+
+.navigation-menu::after {
+  color: #655963;
+  border-top-color: rgba(72, 56, 62, 0.16);
+}
+
+/* Later Home panels must remain below the open navigation. */
+.home-voice,
+.daily-workspace,
+.shelves {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 680px) {
+  .navigation-menu {
+    top: 56px;
+    left: 0;
+
+    width: min(260px, calc(100vw - 28px));
+    max-height: calc(100vh - 78px);
+  }
+}
+
+
+/* =================================
+   MENU TONE PATCH — match wallpaper glass
+================================= */
+
+.navigation-menu {
+  border-color: rgba(255, 255, 255, 0.34);
+  color: #2f262c;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 244, 225, 0.44),
+      rgba(112, 77, 105, 0.24)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 22px 44px rgba(22, 14, 18, 0.24);
+
+  backdrop-filter: blur(26px) saturate(138%);
+  -webkit-backdrop-filter: blur(26px) saturate(138%);
+}
+
+.navigation-menu a {
+  color: #332730;
+}
+
+.navigation-menu a:hover,
+.navigation-menu a:focus-visible,
+.navigation-menu a:first-child {
+  color: #3f2e3d;
+  background: rgba(255, 250, 241, 0.42);
+}
+
+.navigation-menu::after {
+  color: #5f4d57;
+  border-top-color: rgba(255, 255, 255, 0.22);
+}
+
+
+/* =================================
+   MENU TONE PATCH 2 — less transparent
+================================= */
+.navigation-menu {
+  border-color: rgba(255, 255, 255, 0.52);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 248, 239, 0.82),
+      rgba(226, 208, 216, 0.72)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.84),
+    0 22px 46px rgba(21, 14, 18, 0.30);
+  backdrop-filter: blur(24px) saturate(136%);
+  -webkit-backdrop-filter: blur(24px) saturate(136%);
+}
+
+.navigation-menu a {
+  color: #2f252c;
+  font-weight: 600;
+}
+
+.navigation-menu a:hover,
+.navigation-menu a:focus-visible,
+.navigation-menu a:first-child {
+  color: #352a33;
+  background: rgba(255, 253, 248, 0.74);
+}
+
+.navigation-menu::after {
+  color: #5b4a56;
+}

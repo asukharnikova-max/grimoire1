@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Grimoire — a living home that remembers and quietly helps." name="description"/>
+<meta content="#f3ede4" name="theme-color"/>
+<title>Grimoire</title>
+<link href="./grimoire-bundle.css?v=flat-1" rel="stylesheet"/>
+<link href="./gratitude.css?v=3" rel="stylesheet"/>
+<link href="./navigation.css?v=liquid-menu-4" rel="stylesheet"/>
+<link href="./calendar.css?v=6" rel="stylesheet"/>
+<link href="./dayView.css?v=3" rel="stylesheet"/>
+<link href="./dayViewEvents.css?v=4" rel="stylesheet"/>
+<link href="./homeChoiceDialogs.css?v=2" rel="stylesheet"/>
+<link href="./library.css?v=13" rel="stylesheet"/></head>
+<body>
+<main class="home">
+<header class="home-header">
+<button aria-expanded="false" aria-label="Open navigation" class="navigation-button" id="navigation-button" type="button">
+          ☰
+        </button>
+<nav class="navigation-menu" hidden="" id="navigation-menu">
+<a data-room-link="home" href="#home">🏡 Home</a>
+<a data-room-link="library" href="#library">📚 Library</a>
+<a data-room-link="recipes" href="#recipes">🍲 Recipes</a>
+<a data-room-link="movies" href="#movies">🎬 Movies &amp; Series</a>
+<a data-room-link="crafts" href="#crafts">🧵 Crafts</a>
+<a data-room-link="calendar" href="#calendar">📅 Calendar</a>
+<a data-room-link="profile" href="#profile">👤 Profile</a></nav>
+<div class="home-heading">
+<p class="brand-name">
+            Grimoire
+          </p>
+<h1>Home</h1>
+<p class="today-date" id="today-date">
+            Your day is waking up…
+          </p>
+</div>
+<button aria-label="Open Sasha's profile" class="profile-button" id="profile-button" type="button">
+<span aria-hidden="true" class="profile-avatar">
+            S
+          </span>
+<span class="profile-name">
+            Sasha
+          </span>
+</button>
+</header>
+<div class="app-room" data-room="home" id="home-room">
+<section aria-labelledby="home-message-title" class="home-voice">
+<div aria-hidden="true" class="home-symbol">
+          ✦
+        </div>
+<div class="home-message">
+<p class="section-label">
+            A note from Home
+          </p>
+<h2 id="home-message-title">
+            Welcome home.
+          </h2>
+<p id="home-message-text">
+            Everything is exactly where you left it.
+          </p>
+</div>
+<button class="talk-to-home-button" id="talk-to-home-button" type="button">
+          Talk to your Home…
+        </button>
+</section>
+<section aria-label="Today's workspace" class="daily-workspace">
+<article aria-labelledby="today-title" class="today-panel">
+<header class="panel-header">
+<div>
+<p class="section-label">
+                Right now
+              </p>
+<h2 id="today-title">
+                Today
+              </h2>
+</div>
+<span class="quest-summary" id="quest-summary">
+              A fresh beginning
+            </span>
+</header>
+<section aria-label="Daily check-in" class="daily-signals">
+<div class="signal-group">
+<p class="signal-label">
+                Mood
+              </p>
+<button aria-label="Choose today's mood" class="signal-button" id="mood-button" type="button">
+<span class="signal-emoji" id="mood-emoji">
+                  😊
+                </span>
+<span class="signal-message" id="mood-message">
+                  Every feeling has a place here.
+                </span>
+</button>
+</div>
+<div class="signal-group">
+<p class="signal-label">
+                Energy
+              </p>
+<button aria-label="Choose today's energy" class="signal-button" id="energy-button" type="button">
+<span class="signal-emoji" id="energy-emoji">
+                  🌿
+                </span>
+<span class="signal-message" id="energy-message">
+                  The house will meet you at your pace.
+                </span>
+</button>
+</div>
+<div class="signal-group">
+<p class="signal-label">
+                Outside
+              </p>
+<button aria-label="Choose today's view outside" class="signal-button" id="weather-button" type="button">
+<span class="signal-emoji" id="weather-emoji">
+                  🌤️
+                </span>
+<span class="signal-message" id="weather-message">
+                  The windows are waiting for today's story.
+                </span>
+</button>
+</div>
+</section>
+<section aria-labelledby="quests-title" class="quests-section">
+<header class="subsection-header">
+<div>
+<p class="section-label">
+                  Small steps
+                </p>
+<h3 id="quests-title">
+                  Today’s quests
+                </h3>
+</div>
+<div class="home-quick-create-actions">
+<button class="small-action-button" id="add-quest-button" type="button">
+                Add quest
+              </button>
+<button class="small-action-button home-add-event-button" id="home-add-event-button" type="button">
+                Add event
+              </button>
+</div>
+</header>
+<div aria-live="polite" class="quest-status" id="quest-status" role="status"></div>
+<div aria-label="Active quests" class="quest-list" id="active-quest-list">
+<div class="gentle-empty-state" id="quest-empty-state">
+<span aria-hidden="true">
+                  ✧
+                </span>
+<div>
+<strong>
+                    Nothing is asking for your attention yet.
+                  </strong>
+<p>
+                    We can choose one small thing whenever you are ready.
+                  </p>
+</div>
+</div>
+</div>
+<section aria-labelledby="completed-quests-title" class="completed-quests-section" hidden="" id="completed-quests-section">
+<header class="completed-quests-header">
+<p class="completed-quests-title" id="completed-quests-title">
+                  Done today
+                </p>
+<span class="completed-quest-count" id="completed-quest-count">
+                  0
+                </span>
+</header>
+<div aria-label="Completed quests" class="quest-list completed-quest-list" id="completed-quest-list"></div>
+</section>
+</section>
+<section aria-labelledby="gratitude-title" class="gratitude-section">
+<header class="gratitude-header">
+<div>
+<p class="section-label">
+                  A small bright thing
+                </p>
+<h3 id="gratitude-title">
+                  A little gratitude
+                </h3>
+</div>
+<span aria-live="polite" class="gratitude-status" id="gratitude-status" role="status"></span>
+</header>
+<div class="gratitude-saved" hidden="" id="gratitude-saved">
+<div aria-label="Today's gratitude" class="gratitude-saved-text" id="gratitude-saved-text" role="list"></div>
+</div>
+<textarea id="gratitude-input" placeholder="Waiting for your words" rows="2"></textarea>
+<div class="gratitude-actions">
+<button class="primary-button gratitude-save-button" id="save-gratitude-button" type="button">
+                Keep this memory
+              </button>
+</div>
+</section>
+</article>
+<article aria-labelledby="journal-title" class="journal-panel">
+<header class="panel-header">
+<div>
+<p class="section-label">
+                Today’s page
+              </p>
+<h2 id="journal-title">
+                Journal
+              </h2>
+</div>
+<span class="journal-status" id="journal-status">
+              Waiting for your words
+            </span>
+</header>
+<div class="journal-editor" id="journal-editor">
+<textarea class="journal-text" id="journal-text" placeholder="You can leave your thoughts here. The house will keep them safe."></textarea>
+<div aria-live="polite" class="journal-media" id="journal-media"></div>
+</div>
+<footer class="journal-actions">
+<label class="journal-photo-button" for="journal-photo-input">
+              Add photo
+            </label>
+<input accept="image/*" hidden="" id="journal-photo-input" multiple="" type="file"/>
+<button class="primary-button" id="save-journal-button" type="button">
+              Keep today’s page
+            </button>
+</footer>
+</article>
+</section>
+<section aria-labelledby="shelves-title" class="shelves">
+<header class="shelves-header">
+<div>
+<p class="section-label">
+              Things living with you
+            </p>
+<h2 id="shelves-title">
+              On the Shelves
+            </h2>
+</div>
+<button class="small-action-button" id="customize-shelves-button" type="button">
+            Arrange the shelves
+          </button>
+</header>
+<div class="shelf-list" id="shelf-list">
+<article class="shelf-card shelf-placeholder">
+<span aria-hidden="true">
+              📚
+            </span>
+<strong>
+              Your current story can rest here.
+            </strong>
+<p>
+              A book, film or series will appear when you keep it nearby.
+            </p>
+</article>
+<article class="shelf-card shelf-placeholder">
+<span aria-hidden="true">
+              🍲
+            </span>
+<strong>
+              What shall we cook tonight?
+            </strong>
+<p>
+              Keep a recipe here so it is ready when evening arrives.
+            </p>
+</article>
+<article class="shelf-card shelf-placeholder">
+<span aria-hidden="true">
+              🧵
+            </span>
+<strong>
+              A quiet project can wait here.
+            </strong>
+<p>
+              Your crafts and long-term projects will never be forgotten.
+            </p>
+</article>
+</div>
+</section>
+</div>
+
+<section aria-labelledby="library-room-title" class="app-room library-room" data-room="library" hidden="" id="library-room">
+<section aria-labelledby="library-message-title" class="home-voice library-intro">
+<div aria-hidden="true" class="home-symbol">✦</div>
+<div class="home-message">
+<p class="section-label">A note from Home</p>
+<h2 id="library-message-title">Every story leaves something behind.</h2>
+<p>The Library keeps what you are reading, listening to and remembering.</p>
+</div>
+<button class="talk-to-home-button library-add-button" id="library-add-item-button" type="button">Add a story</button>
+</section>
+<section class="library-dashboard">
+<div class="library-main-column">
+<section class="library-glass-panel" aria-labelledby="library-room-title">
+<header class="library-panel-header">
+<div><p class="section-label">Open stories</p><h2 id="library-room-title">Currently with you</h2></div>
+<p class="library-status" id="library-status" role="status"></p>
+</header>
+<div class="library-current-grid" id="library-current-grid"></div>
+</section>
+<section class="library-glass-panel" aria-labelledby="library-shelves-title">
+<header class="library-panel-header">
+<div><p class="section-label">Your collection</p><h2 id="library-shelves-title">The shelves</h2></div>
+</header>
+<div class="library-filter-row" aria-label="Filter Library">
+<button class="library-filter-button is-active" data-library-filter="all" type="button">All</button>
+<button class="library-filter-button" data-library-filter="book" type="button">Books</button>
+<button class="library-filter-button" data-library-filter="audiobook" type="button">Audiobooks</button>
+<button class="library-filter-button" data-library-filter="manga" type="button">Manga</button>
+<button class="library-filter-button" data-library-filter="podcast" type="button">Podcasts</button>
+<button class="library-filter-button" data-library-filter="tbr" type="button">TBR</button>
+<button class="library-filter-button" data-library-filter="finished" type="button">Finished</button>
+</div>
+<div class="library-books-grid" id="library-books-grid"></div>
+</section>
+</div>
+<aside class="library-side-column">
+<section class="library-glass-panel" aria-labelledby="library-lists-title">
+<header class="library-panel-header"><div><p class="section-label">Collections</p><h3 id="library-lists-title">Reading Lists</h3></div></header>
+<div class="library-list-stack" id="library-reading-lists"></div>
+</section>
+<section class="library-glass-panel" aria-labelledby="library-dictionary-title">
+<header class="library-panel-header"><div><p class="section-label">Words gathered</p><h3 id="library-dictionary-title">Dictionary</h3></div></header>
+<div class="library-dictionary-stack" id="library-dictionary-preview"></div>
+</section>
+</aside>
+</section>
+</section>
+<section aria-labelledby="calendar-title" class="app-room calendar-room" data-room="calendar" hidden="" id="calendar-room">
+<section aria-labelledby="calendar-message-title" class="home-voice calendar-intro">
+<div aria-hidden="true" class="home-symbol">
+      ✦
+    </div>
+<div class="home-message">
+<p class="section-label">
+        A note from Home
+      </p>
+<h2 id="calendar-message-title">
+        There is room for every kind of day.
+      </h2>
+<p>
+        Quests and plans can settle into the dates where they belong.
+      </p>
+</div>
+<button class="talk-to-home-button" id="calendar-today-button" type="button">
+      Return to today
+    </button>
+</section>
+<section aria-labelledby="calendar-title" class="calendar-panel">
+<header class="calendar-panel-header">
+<div>
+<p class="section-label">
+          Your month
+        </p>
+<h2 id="calendar-title">
+          Calendar
+        </h2>
+</div>
+<span aria-live="polite" class="calendar-status" id="calendar-status" role="status"></span>
+</header>
+<div class="calendar-toolbar">
+<button aria-label="Previous month" class="calendar-nav-button" id="calendar-previous-month" type="button">
+        ‹
+      </button>
+<h3 id="calendar-month-label">
+        This month
+      </h3>
+<button aria-label="Next month" class="calendar-nav-button" id="calendar-next-month" type="button">
+        ›
+      </button>
+</div>
+<div aria-label="Monthly calendar" class="calendar-grid" id="calendar-grid"></div>
+<section aria-labelledby="calendar-selected-date" class="calendar-day-panel" hidden="">
+<header class="calendar-day-header">
+<div>
+<p class="section-label">
+            Quests for this day
+          </p>
+<h3 id="calendar-selected-date">
+            Choose a day
+          </h3>
+</div>
+</header>
+<div class="calendar-selected-quests" id="calendar-selected-quests">
+<p class="calendar-empty-day">
+          The House will show the quests waiting there.
+        </p>
+</div>
+</section>
+</section>
+</section>
+</main>
+<dialog aria-labelledby="quest-dialog-title" class="quest-dialog" id="quest-dialog">
+<form class="quest-form" id="quest-form" method="dialog">
+<header class="quest-dialog-header">
+<div>
+<p class="section-label">
+              A note for the day
+            </p>
+<h2 id="quest-dialog-title">
+              Add a quest
+            </h2>
+</div>
+<button aria-label="Close quest window" class="dialog-close-button" id="close-quest-dialog-button" type="button">
+            ×
+          </button>
+</header>
+<div class="quest-form-field">
+<label for="quest-title-input">
+            Quest
+          </label>
+<input autocomplete="off" id="quest-title-input" maxlength="160" name="quest-title" placeholder="What needs to be done?" required="" type="text"/>
+</div>
+<div class="quest-form-field">
+<label for="quest-note-input">
+            A small note
+          </label>
+<textarea id="quest-note-input" maxlength="500" name="quest-note" placeholder="Anything that might help you begin." rows="3"></textarea>
+</div>
+<div class="quest-form-field">
+<label for="quest-category-select">
+            Category
+          </label>
+<select id="quest-category-select" name="quest-category">
+<option value="shopping">Shopping</option>
+<option value="cooking">Cooking</option>
+<option value="cleaning">Cleaning</option>
+<option value="workout">Workout</option>
+<option value="reading">Reading</option>
+<option value="trips">Trips</option>
+<option value="selfCare">Self-care</option>
+<option value="appointment">Appointment</option>
+<option value="crafts">Crafts</option>
+<option selected="" value="general">General</option>
+</select>
+</div>
+<fieldset class="difficulty-fieldset">
+<legend>
+            How heavy is this quest?
+          </legend>
+<div class="difficulty-options">
+<label class="difficulty-option">
+<input name="quest-difficulty" type="radio" value="micro"/>
+<span class="difficulty-card">
+<span aria-hidden="true" class="difficulty-emoji">
+                  🌱
+                </span>
+<span>
+<strong>
+                    Small
+                  </strong>
+<small>
+                    A little thing that still counts.
+                  </small>
+</span>
+</span>
+</label>
+<label class="difficulty-option">
+<input checked="" name="quest-difficulty" type="radio" value="regular"/>
+<span class="difficulty-card">
+<span aria-hidden="true" class="difficulty-emoji">
+                  ✦
+                </span>
+<span>
+<strong>
+                    Everyday
+                  </strong>
+<small>
+                    A clear task for an ordinary day.
+                  </small>
+</span>
+</span>
+</label>
+<label class="difficulty-option">
+<input name="quest-difficulty" type="radio" value="boss"/>
+<span class="difficulty-card">
+<span aria-hidden="true" class="difficulty-emoji">
+                  🗝️
+                </span>
+<span>
+<strong>
+                    Big
+                  </strong>
+<small>
+                    Something that may need more room.
+                  </small>
+</span>
+</span>
+</label>
+</div>
+</fieldset>
+<p class="quest-form-error" hidden="" id="quest-form-error" role="alert"></p>
+<footer class="quest-form-actions">
+<button class="secondary-button" id="cancel-quest-button" type="button">
+            Leave it for now
+          </button>
+<button class="primary-button" id="save-quest-button" type="submit">
+            Keep this quest
+          </button>
+</footer>
+</form>
+</dialog>
+
+<dialog aria-labelledby="library-item-dialog-title" class="library-item-dialog" id="library-item-dialog">
+<form class="library-item-form" id="library-item-form">
+<header class="library-item-form-header">
+<div><p class="section-label">A new story</p><h2 id="library-item-dialog-title">Add to the Library</h2></div>
+<button aria-label="Close Library item window" class="dialog-close-button" id="library-item-dialog-close" type="button">×</button>
+</header>
+<div class="library-form-grid">
+<label class="library-field"><span>Type</span><select name="type"><option value="book">Book</option><option value="audiobook">Audiobook</option><option value="manga">Manga</option><option value="podcast">Podcast</option></select></label>
+<label class="library-field"><span>Status</span><select name="status"><option value="tbr">TBR</option><option value="reading">Reading</option><option value="listening">Listening</option><option value="finished">Finished</option><option value="dnf">DNF</option></select></label>
+<label class="library-field is-wide"><span>Title</span><input name="title" required type="text" autocomplete="off"/></label>
+<label class="library-field is-wide"><span>Author</span><input name="author" required type="text" autocomplete="off"/></label>
+<label class="library-field"><span>Story place</span><select name="series_mode" id="library-series-mode"><option value="standalone">Standalone</option><option value="series">Part of a series</option></select></label>
+<label class="library-field library-series-number-field" hidden><span>Book number</span><input name="series_number" min="0" step="0.1" type="number" value="1"/></label>
+<label class="library-field is-wide library-series-name-field" hidden><span>Series name</span><input name="series_name" type="text" autocomplete="off" placeholder="The name of the series"/></label>
+<label class="library-field is-wide"><span>Cover URL</span><input name="cover_url" type="url" inputmode="url"/></label>
+<label class="library-field library-page-total-field"><span>Total pages</span><input min="0" name="total_units" type="number" value="0"/></label>
+<label class="library-field library-page-current-field"><span>Current page</span><input min="0" name="current_unit" type="number" value="0"/></label>
+<div class="library-field is-wide library-time-total-field" hidden>
+  <span>Total duration</span>
+  <div class="library-time-inputs" data-time-group="total">
+    <label><span>Hours</span><input min="0" name="total_hours" type="number" value="0"/></label>
+    <label><span>Minutes</span><input min="0" max="59" name="total_minutes" type="number" value="0"/></label>
+    <label><span>Seconds</span><input min="0" max="59" name="total_seconds" type="number" value="0"/></label>
+  </div>
+</div>
+<div class="library-field is-wide library-time-current-field" hidden>
+  <span>Current position</span>
+  <div class="library-time-inputs" data-time-group="current">
+    <label><span>Hours</span><input min="0" name="current_hours" type="number" value="0"/></label>
+    <label><span>Minutes</span><input min="0" max="59" name="current_minutes" type="number" value="0"/></label>
+    <label><span>Seconds</span><input min="0" max="59" name="current_seconds" type="number" value="0"/></label>
+  </div>
+</div>
+<label class="library-field is-wide"><span>Notes</span><textarea name="notes" placeholder="Anything worth keeping with this story."></textarea></label>
+</div>
+<p class="library-status" id="library-item-form-status" role="status"></p>
+<footer class="library-form-actions"><button class="secondary-button" id="library-item-cancel" type="button">Leave it for now</button><button class="primary-button" type="submit">Keep this story</button></footer>
+</form>
+</dialog>
+<script src="./app.js?v=5" type="module"></script>
+<script src="./quests.js" type="module"></script>
+<script src="./navigation.js?v=2" type="module"></script>
+<script src="./rooms.js?v=3" type="module"></script>
+
+<dialog aria-labelledby="library-story-dialog-title" class="library-detail-dialog" id="library-story-dialog">
+  <div class="library-detail-shell">
+    <button aria-label="Close story card" class="dialog-close-button library-detail-close" id="library-story-dialog-close" type="button">×</button>
+    <div id="library-story-dialog-body"><h2 id="library-story-dialog-title">Story</h2></div>
+  </div>
+</dialog>
+<dialog aria-labelledby="library-word-dialog-title" class="library-detail-dialog" id="library-word-dialog">
+  <div class="library-detail-shell">
+    <button aria-label="Close word card" class="dialog-close-button library-detail-close" id="library-word-dialog-close" type="button">×</button>
+    <div id="library-word-dialog-body"><h2 id="library-word-dialog-title">Word</h2></div>
+  </div>
+</dialog>
+<script src="./library.js?v=25" type="module"></script>
+<dialog class="calendar-day-dialog house-window" id="calendar-day-dialog"><div class="house-window__shell"><header class="house-window__header"><div class="house-window__heading"><div class="house-window__symbol">✦</div><div class="house-window__titles"><p class="house-window__eyebrow">The House remembers</p><h2 class="house-window__title" id="calendar-day-dialog-title">Day</h2><p class="house-window__subtitle">Every memory has a place.</p></div></div><button class="house-window__close" id="calendar-day-dialog-close" type="button">×</button></header><div class="house-window__content" id="calendar-day-dialog-content"></div></div></dialog><script src="./dayView.js?v=3" type="module"></script></body>
+</html>

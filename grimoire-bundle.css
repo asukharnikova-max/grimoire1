@@ -1,0 +1,3390 @@
+/* Grimoire flattened stylesheet for static hosting.
+   Generated from styles/app.css; import order preserved. */
+
+/* ===== styles/foundations/tokens.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+:root {
+  --background: #eee8df;
+  --background-deep: #e5dccf;
+  --surface: rgba(255, 252, 246, 0.82);
+  --surface-strong: #fffaf2;
+  --surface-soft: rgba(245, 238, 227, 0.78);
+
+  --text: #302a26;
+  --text-soft: #756b63;
+  --text-faint: #9a8e83;
+
+  --sage: #738266;
+  --sage-dark: #58684e;
+  --sage-soft: #dfe5d8;
+
+  --rose: #a57b83;
+  --gold: #b49a66;
+
+  --line: rgba(85, 70, 58, 0.15);
+  --line-strong: rgba(85, 70, 58, 0.24);
+
+  --shadow-soft:
+    0 18px 50px rgba(76, 60, 47, 0.08);
+
+  --shadow-small:
+    0 10px 24px rgba(76, 60, 47, 0.07);
+
+  --radius-large: 30px;
+  --radius-medium: 22px;
+  --radius-small: 16px;
+
+  --page-width: 1280px;
+
+  --quest-micro: #879a78;
+  --quest-regular: #a57b83;
+  --quest-boss: #a67b52;
+
+  --quest-shopping: #a57b83;
+  --quest-cooking: #b28d54;
+  --quest-cleaning: #718365;
+  --quest-workout: #72889b;
+  --quest-reading: #87758e;
+  --quest-trips: #6f8f94;
+  --quest-self-care: #af7f96;
+  --quest-appointment: #ad8657;
+  --quest-crafts: #8c7aa3;
+  --quest-neutral: #8b8178;
+}
+
+/* ===== styles/foundations/base.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+
+  color: var(--text);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 8% 2%,
+      rgba(214, 190, 198, 0.38),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 92% 4%,
+      rgba(192, 207, 180, 0.42),
+      transparent 27%
+    ),
+    linear-gradient(
+      180deg,
+      var(--background) 0%,
+      var(--background-deep) 100%
+    );
+
+  background-attachment: fixed;
+}
+
+body:has(dialog[open]) {
+  overflow: hidden;
+}
+
+button,
+textarea,
+input {
+  font: inherit;
+}
+
+button {
+  color: inherit;
+}
+
+button,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+textarea:focus-visible,
+input:focus-visible {
+  outline: 3px solid rgba(115, 130, 102, 0.28);
+  outline-offset: 3px;
+}
+
+/* ===== styles/foundations/motion.css ===== */
+/*
+  Shared motion tokens and accessibility rules will move here later.
+  Intentionally empty for now.
+*/
+
+/* ===== styles/house/home-shell.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+.home {
+  width: min(
+    var(--page-width),
+    calc(100% - 40px)
+  );
+
+  margin: 0 auto;
+  padding: 34px 0 56px;
+}
+
+.home-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+
+  margin-bottom: 24px;
+}
+
+.brand-name {
+  margin: 0 0 8px;
+
+  color: var(--rose);
+
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.home-heading h1 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: clamp(
+    2.7rem,
+    6vw,
+    5rem
+  );
+
+  font-weight: 500;
+  line-height: 0.95;
+}
+
+.today-date {
+  margin: 14px 0 0;
+
+  color: var(--text-soft);
+
+  font-size: 0.98rem;
+}
+
+.profile-button {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  min-height: 56px;
+  padding: 8px 15px 8px 8px;
+
+  border: 1px solid var(--line);
+  border-radius: 999px;
+
+  background: rgba(255, 252, 246, 0.72);
+
+  box-shadow: var(--shadow-small);
+
+  cursor: pointer;
+
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.profile-button:hover {
+  transform: translateY(-1px);
+
+  background: var(--surface-strong);
+
+  box-shadow:
+    0 13px 28px rgba(76, 60, 47, 0.1);
+}
+
+.profile-avatar {
+  display: grid;
+  place-items: center;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  color: #fffdf9;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--sage),
+      var(--sage-dark)
+    );
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.profile-name {
+  font-size: 0.94rem;
+  font-weight: 700;
+}
+
+.home-voice {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 18px;
+
+  min-height: 112px;
+  margin-bottom: 24px;
+  padding: 22px 24px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(115, 130, 102, 0.18);
+  border-radius: var(--radius-large);
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(252, 248, 239, 0.9),
+      rgba(233, 239, 228, 0.78)
+    );
+
+  box-shadow: var(--shadow-soft);
+}
+
+.home-voice::after {
+  position: absolute;
+  top: -38px;
+  right: 8%;
+
+  width: 130px;
+  height: 130px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(255, 255, 255, 0.54),
+      transparent 70%
+    );
+
+  content: "";
+  pointer-events: none;
+}
+
+.home-symbol {
+  display: grid;
+  place-items: center;
+
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+
+  color: var(--gold);
+  background: rgba(255, 255, 255, 0.62);
+
+  font-size: 1.35rem;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(180, 154, 102, 0.18);
+}
+
+.section-label {
+  margin: 0 0 6px;
+
+  color: var(--text-faint);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.home-message h2,
+.panel-header h2,
+.shelves-header h2,
+.quest-dialog-header h2 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-weight: 500;
+}
+
+.home-message h2 {
+  font-size: 1.5rem;
+}
+
+.home-message p:last-child {
+  margin: 7px 0 0;
+
+  color: var(--text-soft);
+
+  line-height: 1.55;
+}
+
+.talk-to-home-button {
+  position: relative;
+  z-index: 1;
+
+  padding: 12px 16px;
+
+  border: 1px solid rgba(115, 130, 102, 0.24);
+  border-radius: 999px;
+
+  color: var(--sage-dark);
+  background: rgba(255, 255, 255, 0.55);
+
+  font-size: 0.9rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.talk-to-home-button:hover {
+  transform: translateY(-1px);
+
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.daily-workspace {
+  display: grid;
+  grid-template-columns:
+    minmax(300px, 0.8fr)
+    minmax(420px, 1.35fr);
+
+  align-items: stretch;
+  gap: 22px;
+
+  margin-bottom: 30px;
+}
+
+.today-panel,
+.journal-panel {
+  min-width: 0;
+  padding: 26px;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-large);
+
+  background: var(--surface);
+
+  box-shadow: var(--shadow-soft);
+
+  backdrop-filter: blur(12px);
+}
+
+.today-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.journal-panel {
+  display: flex;
+  flex-direction: column;
+
+  min-height: 650px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 252, 246, 0.94),
+      rgba(249, 244, 235, 0.88)
+    );
+}
+
+.panel-header,
+.subsection-header,
+.shelves-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.panel-header {
+  margin-bottom: 22px;
+}
+
+.panel-header h2,
+.shelves-header h2 {
+  font-size: 2rem;
+}
+
+.quest-summary,
+.journal-status {
+  max-width: 170px;
+
+  color: var(--text-faint);
+
+  font-size: 0.8rem;
+  line-height: 1.4;
+  text-align: right;
+}
+
+.daily-signals {
+  display: grid;
+  gap: 11px;
+}
+
+.signal-group {
+  min-width: 0;
+}
+
+.signal-label {
+  margin: 0 0 6px;
+
+  color: var(--text-soft);
+
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.signal-button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+  min-height: 58px;
+  padding: 9px 12px;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+
+  background: rgba(255, 255, 255, 0.46);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease;
+}
+
+.signal-button:hover {
+  transform: translateX(2px);
+
+  border-color: rgba(115, 130, 102, 0.35);
+
+  background: rgba(246, 248, 241, 0.92);
+}
+
+.signal-emoji {
+  display: grid;
+  place-items: center;
+
+  width: 38px;
+  height: 38px;
+
+  border-radius: 12px;
+
+  background: var(--surface-soft);
+
+  font-size: 1.35rem;
+}
+
+.signal-message {
+  min-width: 0;
+
+  color: var(--text-soft);
+
+  font-size: 0.88rem;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+#weather-button {
+  grid-template-columns:
+    auto
+    minmax(0, 1fr);
+
+  align-items: center;
+}
+
+#weather-emoji {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2px;
+
+  width: auto !important;
+  min-width: 38px !important;
+  max-width: 104px;
+  height: auto;
+  min-height: 38px;
+
+  padding: 5px 7px !important;
+
+  white-space: normal !important;
+  line-height: 1.05;
+}
+
+#weather-message {
+  min-width: 0;
+
+  overflow-wrap: anywhere;
+}
+
+.quests-section,
+.gratitude-section {
+  margin-top: 24px;
+  padding-top: 22px;
+
+  border-top: 1px solid var(--line);
+}
+
+.subsection-header {
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.subsection-header h3 {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.small-action-button {
+  padding: 9px 13px;
+
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+
+  color: var(--sage-dark);
+  background: transparent;
+
+  font-size: 0.82rem;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.small-action-button:hover {
+  transform: translateY(-1px);
+
+  border-color: rgba(115, 130, 102, 0.45);
+
+  background: rgba(223, 229, 216, 0.55);
+}
+
+.small-action-button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.gentle-empty-state {
+  display: grid;
+  grid-template-columns: 34px 1fr;
+  gap: 12px;
+
+  padding: 16px;
+
+  border-radius: var(--radius-small);
+
+  color: var(--text-soft);
+  background: rgba(241, 235, 225, 0.54);
+}
+
+.gentle-empty-state > span {
+  color: var(--gold);
+
+  font-size: 1.3rem;
+  text-align: center;
+}
+
+.gentle-empty-state strong {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.gentle-empty-state p {
+  margin: 0;
+
+  font-size: 0.82rem;
+  line-height: 1.45;
+}
+
+/* ===== styles/components/quests.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   QUEST LIST
+---------------------------------- */
+
+.quest-status {
+  min-height: 0;
+  margin: -4px 0 10px;
+
+  color: var(--text-faint);
+
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.quest-status:empty {
+  display: none;
+}
+
+.quest-list {
+  display: grid;
+  gap: 9px;
+}
+
+.quest-item {
+  --quest-accent: var(--quest-neutral);
+
+  position: relative;
+
+  display: grid;
+  grid-template-columns:
+    28px
+    30px
+    minmax(0, 1fr)
+    auto;
+
+  align-items: start;
+  gap: 9px;
+
+  width: 100%;
+  min-width: 0;
+  padding: 12px 10px 12px 11px;
+
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--quest-accent);
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.43);
+
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    opacity 160ms ease;
+}
+
+.quest-item:hover {
+  transform: translateX(2px);
+
+  border-color: rgba(85, 70, 58, 0.23);
+
+  background: rgba(255, 255, 255, 0.68);
+}
+
+.quest-item[data-difficulty="micro"] {
+  --quest-accent: var(--quest-micro);
+}
+
+.quest-item[data-difficulty="regular"] {
+  --quest-accent: var(--quest-regular);
+}
+
+.quest-item[data-difficulty="boss"] {
+  --quest-accent: var(--quest-boss);
+}
+
+.quest-item[data-category-color="rose"] {
+  --quest-accent: var(--quest-shopping);
+}
+
+.quest-item[data-category-color="gold"] {
+  --quest-accent: var(--quest-cooking);
+}
+
+.quest-item[data-category-color="sage"] {
+  --quest-accent: var(--quest-cleaning);
+}
+
+.quest-item[data-category-color="blue"] {
+  --quest-accent: var(--quest-workout);
+}
+
+.quest-item[data-category-color="plum"] {
+  --quest-accent: var(--quest-reading);
+}
+
+.quest-item[data-category-color="sky"] {
+  --quest-accent: var(--quest-trips);
+}
+
+.quest-item[data-category-color="pink"] {
+  --quest-accent: var(--quest-self-care);
+}
+
+.quest-item[data-category-color="amber"] {
+  --quest-accent: var(--quest-appointment);
+}
+
+.quest-item[data-category-color="lavender"] {
+  --quest-accent: var(--quest-crafts);
+}
+
+.quest-check-button {
+  position: relative;
+
+  display: grid;
+  place-items: center;
+
+  width: 25px;
+  height: 25px;
+  margin-top: 2px;
+  padding: 0;
+
+  border: 1.5px solid rgba(88, 104, 78, 0.42);
+  border-radius: 50%;
+
+  color: #fff;
+  background: rgba(255, 255, 255, 0.62);
+
+  cursor: pointer;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    transform 160ms ease;
+}
+
+.quest-check-button:hover {
+  transform: scale(1.06);
+
+  border-color: var(--sage);
+
+  background: rgba(223, 229, 216, 0.62);
+}
+
+.quest-check-button::after {
+  opacity: 0;
+
+  font-size: 0.78rem;
+  font-weight: 900;
+
+  content: "✓";
+
+  transition: opacity 160ms ease;
+}
+
+.quest-item.is-completed .quest-check-button {
+  border-color: var(--sage);
+  background: var(--sage);
+}
+
+.quest-item.is-completed .quest-check-button::after {
+  opacity: 1;
+}
+
+.quest-category-emoji {
+  display: grid;
+  place-items: center;
+
+  width: 29px;
+  height: 29px;
+
+  border-radius: 10px;
+
+  background: rgba(245, 238, 227, 0.82);
+
+  font-size: 1.05rem;
+  line-height: 1;
+}
+
+.quest-content {
+  min-width: 0;
+}
+
+.quest-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 7px;
+
+  min-width: 0;
+}
+
+.quest-title {
+  min-width: 0;
+
+  color: var(--text);
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.35;
+
+  overflow-wrap: anywhere;
+}
+
+.quest-difficulty-label {
+  flex: none;
+
+  color: var(--quest-accent);
+
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.quest-note,
+.quest-house-message,
+.quest-completed-message {
+  margin: 4px 0 0;
+
+  color: var(--text-soft);
+
+  font-size: 0.77rem;
+  line-height: 1.42;
+
+  overflow-wrap: anywhere;
+}
+
+.quest-note {
+  color: #675e57;
+}
+
+.quest-house-message {
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-style: italic;
+}
+
+.quest-completed-message {
+  color: var(--sage-dark);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-style: italic;
+}
+
+.quest-menu-wrap {
+  position: relative;
+}
+
+.quest-menu-button {
+  display: grid;
+  place-items: center;
+
+  width: 30px;
+  height: 30px;
+  padding: 0;
+
+  border: none;
+  border-radius: 10px;
+
+  color: var(--text-faint);
+  background: transparent;
+
+  font-size: 1.15rem;
+  line-height: 1;
+
+  cursor: pointer;
+
+  transition:
+    color 160ms ease,
+    background 160ms ease;
+}
+
+.quest-menu-button:hover {
+  color: var(--text);
+  background: var(--surface-soft);
+}
+
+.quest-menu {
+  position: absolute;
+  z-index: 12;
+  top: calc(100% + 5px);
+  right: 0;
+
+  display: grid;
+  gap: 3px;
+
+  min-width: 130px;
+  padding: 6px;
+
+  border: 1px solid var(--line);
+  border-radius: 13px;
+
+  background: var(--surface-strong);
+
+  box-shadow:
+    0 16px 34px rgba(76, 60, 47, 0.16);
+}
+
+.quest-menu[hidden] {
+  display: none;
+}
+
+.quest-menu button {
+  width: 100%;
+  padding: 9px 10px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+
+  font-size: 0.78rem;
+  text-align: left;
+
+  cursor: pointer;
+
+  transition: background 140ms ease;
+}
+
+.quest-menu button:hover {
+  background: var(--surface-soft);
+}
+
+.quest-menu .quest-delete-button {
+  color: #9a5960;
+}
+
+.quest-item.is-working {
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+.quest-item.is-completed {
+  opacity: 0.74;
+
+  border-left-color: rgba(115, 130, 102, 0.52);
+
+  background: rgba(238, 241, 233, 0.55);
+}
+
+.quest-item.is-completed .quest-title {
+  color: var(--text-soft);
+
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.quest-item.is-completed .quest-difficulty-label {
+  display: none;
+}
+
+.completed-quests-section {
+  margin-top: 18px;
+  padding-top: 16px;
+
+  border-top: 1px dashed var(--line-strong);
+}
+
+.completed-quests-section[hidden] {
+  display: none;
+}
+
+.completed-quests-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  margin-bottom: 10px;
+}
+
+.completed-quests-title {
+  margin: 0;
+
+  color: var(--sage-dark);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.completed-quest-count {
+  display: grid;
+  place-items: center;
+
+  min-width: 27px;
+  height: 27px;
+  padding: 0 8px;
+
+  border-radius: 999px;
+
+  color: var(--sage-dark);
+  background: var(--sage-soft);
+
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.completed-quest-list {
+  gap: 7px;
+}
+
+/* ===== styles/components/gratitude.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   GRATITUDE
+---------------------------------- */
+
+.gratitude-section label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: var(--text-soft);
+
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.gratitude-section textarea {
+  width: 100%;
+  min-height: 82px;
+  padding: 13px 14px;
+
+  resize: vertical;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small);
+
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.42);
+
+  line-height: 1.55;
+}
+
+.gratitude-section textarea::placeholder,
+.journal-text::placeholder,
+.quest-form-field input::placeholder,
+.quest-form-field textarea::placeholder {
+  color: var(--text-faint);
+}
+
+/* ===== styles/components/journal.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   JOURNAL
+---------------------------------- */
+
+.journal-editor {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
+  min-height: 430px;
+  padding: 20px;
+
+  border: 1px solid rgba(85, 70, 58, 0.12);
+  border-radius: var(--radius-medium);
+
+  background:
+    linear-gradient(
+      rgba(255, 253, 248, 0.9),
+      rgba(255, 251, 244, 0.82)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+.journal-text {
+  flex: 1;
+
+  width: 100%;
+  min-height: 330px;
+  padding: 0;
+
+  resize: none;
+
+  border: none;
+  outline: none;
+
+  color: var(--text);
+  background: transparent;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.journal-media {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(130px, 1fr)
+    );
+
+  gap: 12px;
+
+  margin-top: 18px;
+}
+
+.journal-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-top: 16px;
+}
+
+.journal-photo-button,
+.primary-button,
+.secondary-button {
+  min-height: 44px;
+  padding: 11px 16px;
+
+  border-radius: 999px;
+
+  font-size: 0.88rem;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.journal-photo-button {
+  border: 1px solid var(--line-strong);
+
+  color: var(--text-soft);
+  background: transparent;
+}
+
+.primary-button {
+  border: none;
+
+  color: #fffdf8;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--sage),
+      var(--sage-dark)
+    );
+
+  box-shadow:
+    0 10px 20px rgba(88, 104, 78, 0.18);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+.primary-button:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 13px 24px rgba(88, 104, 78, 0.23);
+}
+
+.primary-button:disabled {
+  cursor: wait;
+  opacity: 0.68;
+}
+
+.secondary-button {
+  border: 1px solid var(--line-strong);
+
+  color: var(--text-soft);
+  background: transparent;
+
+  transition:
+    background 160ms ease,
+    border-color 160ms ease;
+}
+
+.secondary-button:hover {
+  border-color: rgba(115, 130, 102, 0.42);
+  background: var(--surface-soft);
+}
+
+/* ===== styles/components/house-windows.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   HOUSE WINDOW SYSTEM
+---------------------------------- */
+
+.house-window {
+  width: min(
+    680px,
+    calc(100vw - 28px)
+  );
+
+  max-height: min(
+    860px,
+    calc(100dvh - 28px)
+  );
+
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+
+  color: var(--text);
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(213, 187, 225, 0.24),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(194, 214, 188, 0.26),
+      transparent 38%
+    ),
+    linear-gradient(
+      155deg,
+      #fffaf2 0%,
+      #f5ede3 100%
+    );
+
+  border:
+    1px solid var(--line-strong);
+
+  border-radius:
+    28px;
+
+  box-shadow:
+    0 30px 86px
+      rgba(63, 49, 39, 0.26),
+    0 8px 24px
+      rgba(63, 49, 39, 0.1),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.8);
+}
+
+.house-window::backdrop {
+  background:
+    rgba(54, 44, 38, 0.46);
+
+  backdrop-filter:
+    blur(8px);
+
+  -webkit-backdrop-filter:
+    blur(8px);
+}
+
+.house-window[open] {
+  animation:
+    house-window-in
+    190ms ease-out;
+}
+
+.house-window__shell {
+  display: flex;
+  flex-direction: column;
+
+  max-height:
+    inherit;
+}
+
+.house-window__header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+
+  padding:
+    24px 26px 20px;
+
+  background:
+    rgba(255, 250, 242, 0.88);
+
+  border-bottom:
+    1px solid var(--line);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+.house-window__heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+
+  min-width: 0;
+}
+
+.house-window__symbol {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  width: 40px;
+  height: 40px;
+
+  color:
+    #775c82;
+
+  background:
+    rgba(216, 196, 226, 0.48);
+
+  border:
+    1px solid
+    rgba(119, 92, 130, 0.15);
+
+  border-radius:
+    50%;
+
+  font-size:
+    17px;
+
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.74);
+}
+
+.house-window__titles {
+  min-width: 0;
+}
+
+.house-window__eyebrow {
+  margin:
+    0 0 5px;
+
+  color:
+    var(--text-faint);
+
+  font-size:
+    0.7rem;
+
+  font-weight:
+    800;
+
+  letter-spacing:
+    0.12em;
+
+  text-transform:
+    uppercase;
+}
+
+.house-window__title {
+  margin: 0;
+
+  color:
+    var(--text);
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    clamp(
+      1.35rem,
+      3vw,
+      1.85rem
+    );
+
+  font-weight:
+    600;
+
+  line-height:
+    1.2;
+
+  overflow-wrap:
+    anywhere;
+}
+
+.house-window__subtitle {
+  margin:
+    7px 0 0;
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.9rem;
+
+  line-height:
+    1.5;
+}
+
+.house-window__close {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  color:
+    var(--text-soft);
+
+  background:
+    rgba(255, 255, 255, 0.56);
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    50%;
+
+  font: inherit;
+  font-size:
+    1.5rem;
+
+  line-height:
+    1;
+
+  cursor:
+    pointer;
+
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.house-window__close:hover,
+.house-window__close:focus-visible {
+  color:
+    var(--text);
+
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  box-shadow:
+    0 7px 18px
+      rgba(69, 54, 43, 0.11);
+
+  transform:
+    rotate(4deg)
+    scale(1.03);
+}
+
+.house-window__content {
+  flex: 1;
+
+  min-height: 0;
+  padding:
+    22px 26px 26px;
+
+  overflow-y:
+    auto;
+
+  overscroll-behavior:
+    contain;
+}
+
+.house-window__section {
+  padding:
+    18px;
+
+  background:
+    rgba(255, 255, 255, 0.5);
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    20px;
+
+  box-shadow:
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.72);
+}
+
+.house-window__section
++ .house-window__section {
+  margin-top:
+    14px;
+}
+
+.house-window__section-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+
+  margin-bottom:
+    14px;
+}
+
+.house-window__section-title {
+  margin: 0;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size:
+    1.15rem;
+
+  font-weight:
+    600;
+}
+
+.house-window__section-note {
+  margin:
+    5px 0 0;
+
+  color:
+    var(--text-soft);
+
+  font-size:
+    0.84rem;
+
+  line-height:
+    1.5;
+}
+
+.house-window__actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  padding:
+    16px 26px 20px;
+
+  background:
+    rgba(255, 250, 242, 0.9);
+
+  border-top:
+    1px solid var(--line);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+.house-window__actions
+.primary-button,
+.house-window__actions
+.secondary-button {
+  width:
+    auto;
+}
+
+.house-window__status {
+  margin: 0;
+
+  color:
+    var(--text-faint);
+
+  font-size:
+    0.82rem;
+
+  line-height:
+    1.45;
+}
+
+.house-window__divider {
+  height: 1px;
+  margin:
+    16px 0;
+
+  background:
+    var(--line);
+}
+
+@keyframes house-window-in {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(10px)
+      scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+@media (
+  max-width: 680px
+) {
+  .house-window {
+    width:
+      calc(100vw - 18px);
+
+    max-height:
+      calc(100dvh - 18px);
+
+    border-radius:
+      22px;
+  }
+
+  .house-window__header {
+    gap: 12px;
+
+    padding:
+      19px 18px 16px;
+  }
+
+  .house-window__heading {
+    gap: 10px;
+  }
+
+  .house-window__symbol {
+    width: 36px;
+    height: 36px;
+  }
+
+  .house-window__close {
+    width: 36px;
+    height: 36px;
+  }
+
+  .house-window__content {
+    padding:
+      16px 15px 20px;
+  }
+
+  .house-window__section {
+    padding:
+      15px;
+
+    border-radius:
+      17px;
+  }
+
+  .house-window__actions {
+    align-items:
+      stretch;
+
+    flex-direction:
+      column-reverse;
+
+    padding:
+      14px 15px 16px;
+  }
+
+  .house-window__actions
+  .primary-button,
+  .house-window__actions
+  .secondary-button {
+    width:
+      100%;
+  }
+}
+
+@media (
+  prefers-reduced-motion:
+  reduce
+) {
+  .house-window[open] {
+    animation:
+      none;
+  }
+
+  .house-window__close {
+    transition:
+      none;
+  }
+}
+
+/* ===== styles/components/quest-dialog.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   QUEST DIALOG
+---------------------------------- */
+
+.quest-dialog {
+  width: min(
+    610px,
+    calc(100vw - 28px)
+  );
+
+  max-height: min(
+    820px,
+    calc(100dvh - 28px)
+  );
+
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+
+  color: var(--text);
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(213, 187, 225, 0.24),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at bottom left,
+      rgba(194, 214, 188, 0.26),
+      transparent 38%
+    ),
+    linear-gradient(
+      155deg,
+      #fffaf2 0%,
+      #f5ede3 100%
+    );
+
+  border:
+    1px solid var(--line-strong);
+
+  border-radius:
+    28px;
+
+  box-shadow:
+    0 30px 86px
+      rgba(63, 49, 39, 0.26),
+    0 8px 24px
+      rgba(63, 49, 39, 0.1),
+    inset 0 1px 0
+      rgba(255, 255, 255, 0.8);
+}
+
+.quest-dialog::backdrop {
+  background:
+    rgba(54, 44, 38, 0.46);
+
+  backdrop-filter:
+    blur(8px);
+
+  -webkit-backdrop-filter:
+    blur(8px);
+}
+
+.quest-dialog[open] {
+  animation:
+    house-window-in 190ms ease-out;
+}
+
+.quest-form {
+  max-height:
+    inherit;
+
+  padding:
+    24px 26px 26px;
+
+  overflow-y:
+    auto;
+
+  overscroll-behavior:
+    contain;
+}
+
+.quest-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+
+  margin:
+    -24px -26px 23px;
+
+  padding:
+    24px 26px 20px;
+
+  background:
+    rgba(255, 250, 242, 0.88);
+
+  border-bottom:
+    1px solid var(--line);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+.quest-dialog-header h2 {
+  font-size:
+    clamp(
+      1.35rem,
+      3vw,
+      1.85rem
+    );
+
+  font-weight:
+    600;
+}
+
+.dialog-close-button {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  width: 40px;
+  height: 40px;
+  padding: 0;
+
+  color:
+    var(--text-soft);
+
+  background:
+    rgba(255, 255, 255, 0.56);
+
+  border:
+    1px solid var(--line);
+
+  border-radius:
+    50%;
+
+  font: inherit;
+  font-size:
+    1.5rem;
+
+  line-height:
+    1;
+
+  cursor:
+    pointer;
+
+  transition:
+    color 150ms ease,
+    background 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.dialog-close-button:hover,
+.dialog-close-button:focus-visible {
+  color:
+    var(--text);
+
+  background:
+    rgba(255, 255, 255, 0.94);
+
+  box-shadow:
+    0 7px 18px
+      rgba(69, 54, 43, 0.11);
+
+  transform:
+    rotate(4deg)
+    scale(1.03);
+}
+
+.quest-form-field {
+  display: grid;
+  gap: 7px;
+
+  margin-bottom: 18px;
+}
+
+.quest-form-field label,
+.difficulty-fieldset legend {
+  color: var(--text-soft);
+
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+.quest-form-field input,
+.quest-form-field textarea {
+  width: 100%;
+  padding: 13px 14px;
+
+  border: 1px solid var(--line);
+  border-radius: 14px;
+
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.62);
+
+  line-height: 1.5;
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.quest-form-field input {
+  min-height: 48px;
+}
+
+.quest-form-field textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.quest-form-field input:focus,
+.quest-form-field textarea:focus {
+  border-color: rgba(115, 130, 102, 0.48);
+
+  background: rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 0 0 4px rgba(115, 130, 102, 0.1);
+
+  outline: none;
+}
+
+
+.quest-form-field select{
+width:100%;
+min-height:48px;
+padding:13px 14px;
+border:1px solid var(--line);
+border-radius:14px;
+color:var(--text);
+background:rgba(255,255,255,.62);
+line-height:1.5;
+appearance:none;
+cursor:pointer;
+}
+.quest-form-field select:focus{
+border-color:rgba(115,130,102,.48);
+background:rgba(255,255,255,.9);
+box-shadow:0 0 0 4px rgba(115,130,102,.1);
+outline:none;
+}
+
+.difficulty-fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+
+  border: none;
+}
+
+.difficulty-fieldset legend {
+  margin-bottom: 9px;
+}
+
+.difficulty-options {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 9px;
+}
+
+.difficulty-option {
+  display: block;
+
+  min-width: 0;
+
+  cursor: pointer;
+}
+
+.difficulty-option input {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+.difficulty-card {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 9px;
+
+  min-height: 80px;
+  padding: 11px;
+
+  border: 1px solid var(--line);
+  border-radius: 15px;
+
+  background: rgba(255, 255, 255, 0.42);
+
+  transition:
+    border-color 160ms ease,
+    background 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.difficulty-option:hover .difficulty-card {
+  transform: translateY(-1px);
+
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.difficulty-option input:checked + .difficulty-card {
+  border-color: rgba(115, 130, 102, 0.48);
+
+  background: rgba(223, 229, 216, 0.66);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(115, 130, 102, 0.13);
+}
+
+.difficulty-option input:focus-visible + .difficulty-card {
+  outline: 3px solid rgba(115, 130, 102, 0.25);
+  outline-offset: 3px;
+}
+
+.difficulty-emoji {
+  font-size: 1.35rem;
+}
+
+.difficulty-card strong {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 0.78rem;
+}
+
+.difficulty-card small {
+  display: block;
+
+  color: var(--text-soft);
+
+  font-size: 0.67rem;
+  line-height: 1.35;
+}
+
+.quest-form-error {
+  margin: 15px 0 0;
+  padding: 11px 12px;
+
+  border: 1px solid rgba(154, 89, 96, 0.2);
+  border-radius: 12px;
+
+  color: #8a4f56;
+  background: rgba(181, 109, 118, 0.09);
+
+  font-size: 0.79rem;
+  line-height: 1.4;
+}
+
+.quest-form-error[hidden] {
+  display: none;
+}
+
+.quest-form-actions {
+  position: sticky;
+  bottom: -26px;
+  z-index: 4;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+
+  margin:
+    23px -26px -26px;
+
+  padding:
+    16px 26px 20px;
+
+  background:
+    rgba(255, 250, 242, 0.9);
+
+  border-top:
+    1px solid var(--line);
+
+  backdrop-filter:
+    blur(14px);
+
+  -webkit-backdrop-filter:
+    blur(14px);
+}
+
+
+/* =========================================
+   LIQUID GLASS POPUPS — QUEST DIALOG
+========================================= */
+.quest-dialog {
+  color: #30262d;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 249, 240, 0.92), transparent 32%),
+    radial-gradient(circle at 86% 18%, rgba(174, 137, 147, 0.16), transparent 28%),
+    radial-gradient(circle at 78% 84%, rgba(120, 136, 106, 0.14), transparent 28%),
+    linear-gradient(145deg, rgba(255, 248, 241, 0.92), rgba(217, 196, 199, 0.56));
+  border: 1px solid rgba(255, 255, 255, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    0 24px 54px rgba(26, 14, 18, 0.34),
+    0 8px 20px rgba(26, 14, 18, 0.16);
+  backdrop-filter: blur(26px) saturate(135%);
+  -webkit-backdrop-filter: blur(26px) saturate(135%);
+}
+
+.quest-dialog::backdrop {
+  background: rgba(25, 15, 17, 0.46);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.quest-dialog-header,
+.quest-form-actions {
+  background: rgba(255, 248, 241, 0.54);
+  border-color: rgba(122, 96, 108, 0.12);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.quest-dialog-header h2,
+.quest-form-field label,
+.difficulty-fieldset legend,
+.difficulty-card strong {
+  color: #2f202b;
+}
+
+.quest-form-field label,
+.difficulty-fieldset legend {
+  color: #5d4252;
+}
+
+.quest-form-field input,
+.quest-form-field textarea,
+.quest-form-field select,
+.difficulty-card {
+  color: #342931;
+  background: linear-gradient(145deg, rgba(255, 252, 247, 0.82), rgba(238, 226, 218, 0.44));
+  border-color: rgba(122, 96, 108, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.56);
+}
+
+.quest-form-field input::placeholder,
+.quest-form-field textarea::placeholder,
+.difficulty-card small {
+  color: #65555d;
+}
+
+.difficulty-option input:checked + .difficulty-card {
+  border-color: rgba(104, 123, 92, 0.28);
+  background: linear-gradient(145deg, rgba(228, 237, 222, 0.82), rgba(233, 220, 229, 0.54));
+}
+
+.dialog-close-button {
+  color: #44353f;
+  background: rgba(255, 255, 255, 0.48);
+  border-color: rgba(122, 96, 108, 0.12);
+}
+
+.dialog-close-button:hover,
+.dialog-close-button:focus-visible {
+  color: #2f202b;
+  background: rgba(255, 255, 255, 0.72);
+}
+
+/* ===== styles/components/shelves.css ===== */
+/* Extracted from the stable stylesheet. Keep import order unchanged. */
+
+/* ---------------------------------
+   SHELVES
+---------------------------------- */
+
+.shelves {
+  padding: 26px;
+
+  border-top: 1px solid var(--line);
+}
+
+.shelves-header {
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.shelf-list {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap: 16px;
+}
+
+.shelf-card {
+  position: relative;
+
+  min-height: 176px;
+  padding: 20px;
+
+  overflow: hidden;
+
+  border: 1px solid var(--line);
+  border-radius: var(--radius-medium);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 252, 246, 0.84),
+      rgba(238, 231, 220, 0.76)
+    );
+
+  box-shadow: var(--shadow-small);
+}
+
+.shelf-card::after {
+  position: absolute;
+  right: 18px;
+  bottom: 15px;
+  left: 18px;
+
+  height: 4px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(135, 106, 78, 0.2),
+      rgba(135, 106, 78, 0.55),
+      rgba(135, 106, 78, 0.2)
+    );
+
+  content: "";
+}
+
+.shelf-card > span {
+  display: block;
+
+  margin-bottom: 16px;
+
+  font-size: 1.65rem;
+}
+
+.shelf-card strong {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 1.08rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.shelf-card p {
+  max-width: 270px;
+  margin: 0;
+
+  color: var(--text-soft);
+
+  font-size: 0.84rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 980px) {
+  .daily-workspace {
+    grid-template-columns: 1fr;
+  }
+
+  .journal-panel {
+    min-height: 590px;
+  }
+
+  .shelf-list {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
+  }
+
+  #weather-emoji {
+    max-width: 144px;
+  }
+}
+
+@media (max-width: 680px) {
+  .home {
+    width: min(
+      100% - 24px,
+      var(--page-width)
+    );
+
+    padding-top: 22px;
+  }
+
+  .home-header {
+    align-items: center;
+  }
+
+  .home-heading h1 {
+    font-size: 2.8rem;
+  }
+
+  .profile-button {
+    padding-right: 9px;
+  }
+
+  .profile-name {
+    display: none;
+  }
+
+  .home-voice {
+    grid-template-columns: auto 1fr;
+    padding: 19px;
+  }
+
+  .talk-to-home-button {
+    grid-column: 1 / -1;
+
+    width: 100%;
+  }
+
+  .today-panel,
+  .journal-panel {
+    padding: 20px;
+
+    border-radius: 24px;
+  }
+
+  .panel-header {
+    align-items: flex-start;
+  }
+
+  .quest-summary,
+  .journal-status {
+    max-width: 120px;
+  }
+
+  .journal-panel {
+    min-height: 540px;
+  }
+
+  .journal-editor {
+    min-height: 370px;
+    padding: 16px;
+  }
+
+  .journal-text {
+    min-height: 280px;
+  }
+
+  .journal-actions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .journal-photo-button,
+  .primary-button,
+  .secondary-button {
+    display: grid;
+    place-items: center;
+
+    width: 100%;
+  }
+
+  .shelves {
+    padding: 22px 4px 8px;
+  }
+
+  .shelves-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .shelf-list {
+    grid-template-columns: 1fr;
+  }
+
+  #weather-button {
+    align-items: start;
+  }
+
+  #weather-emoji {
+    max-width: 92px;
+  }
+
+  .quest-item {
+    grid-template-columns:
+      26px
+      28px
+      minmax(0, 1fr)
+      28px;
+
+    gap: 7px;
+
+    padding-right: 8px;
+    padding-left: 9px;
+  }
+
+  .quest-dialog {
+    width:
+      calc(100vw - 18px);
+
+    max-height:
+      calc(100dvh - 18px);
+
+    border-radius:
+      22px;
+  }
+
+  .quest-form {
+    padding:
+      19px 18px 20px;
+  }
+
+  .quest-dialog-header {
+    margin:
+      -19px -18px 20px;
+
+    padding:
+      19px 18px 16px;
+  }
+
+  .quest-form-actions {
+    bottom:
+      -20px;
+
+    margin:
+      22px -18px -20px;
+
+    padding:
+      14px 18px 16px;
+  }
+
+  .difficulty-options {
+    grid-template-columns: 1fr;
+  }
+
+  .difficulty-card {
+    min-height: 62px;
+  }
+
+  .quest-form-actions {
+    align-items: stretch;
+    flex-direction: column-reverse;
+  }
+}
+
+/* ===== styles/components/buttons.css ===== */
+/*
+  Shared button primitives will move here after the stable migration is verified.
+  Intentionally empty for now.
+*/
+
+/* ===== styles/components/paper.css ===== */
+/*
+  Shared paper surfaces will move here after the stable migration is verified.
+  Intentionally empty for now.
+*/
+
+/* ===== styles/components/frames.css ===== */
+/*
+  Shared furniture-like frames will move here after the stable migration is verified.
+  Intentionally empty for now.
+*/
+
+/* ===== styles/rooms/hearth/hearth-layout.css ===== */
+/*
+  Reserved for the future structural layout of The Hearth.
+  Intentionally empty during the no-visual-change migration.
+*/
+
+/* ===== styles/rooms/hearth/hearth-atmosphere.css ===== */
+/*
+  THE HEARTH — VINTAGE WALLPAPER + LIQUID GLASS
+
+  The wallpaper is a real, readable background.
+  Liquid Glass belongs only to interface surfaces.
+*/
+
+:root {
+  --hearth-ink: #30282d;
+  --hearth-ink-soft: #655861;
+  --hearth-ink-faint: #796a72;
+  --hearth-plum: #694b68;
+  --hearth-plum-deep: #473346;
+  --hearth-burgundy: #875064;
+  --hearth-moss: #65745d;
+  --hearth-moss-deep: #46533f;
+  --hearth-amber: #bf8b48;
+  --hearth-brass: #a57b3f;
+
+  --glass-border: rgba(255, 255, 255, 0.34);
+  --glass-highlight: rgba(255, 255, 255, 0.56);
+  --glass-shadow: rgba(20, 11, 15, 0.28);
+}
+
+/* REAL WALLPAPER BACKGROUND — no blur, no gradient pretending to be a room. */
+body {
+  min-height: 100vh;
+
+  background-color: #17110f;
+  background-image:
+    linear-gradient(
+      rgba(24, 16, 18, 0.08),
+      rgba(24, 16, 18, 0.08)
+    ),
+    url("./hearth-floral-wallpaper.jpg");
+  background-position: center top;
+  background-repeat: repeat;
+  background-size: 760px auto;
+  background-attachment: fixed;
+}
+
+body::before,
+body::after,
+.home::before {
+  display: none;
+}
+
+.home {
+  position: relative;
+}
+
+/* LIQUID GLASS EXISTS ONLY ON THE PANELS. */
+.home-header,
+.home-voice,
+.today-panel,
+.journal-panel,
+.shelves {
+  border: 1px solid var(--glass-border);
+  border-radius: 28px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 249, 239, 0.34),
+      rgba(222, 204, 209, 0.2)
+    );
+
+  box-shadow:
+    inset 0 1px 0 var(--glass-highlight),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+    0 20px 48px var(--glass-shadow),
+    0 2px 9px rgba(38, 23, 27, 0.12);
+
+  backdrop-filter: blur(22px) saturate(138%);
+  -webkit-backdrop-filter: blur(22px) saturate(138%);
+}
+
+/* HEADER — calmer and more compact. */
+.home-header {
+  align-items: center;
+  min-height: 0;
+  padding: clamp(18px, 2.4vw, 28px);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 244, 225, 0.32),
+      rgba(112, 77, 105, 0.2)
+    );
+}
+
+.brand-name {
+  margin: 0 0 5px;
+  padding: 0;
+
+  border: 0;
+
+  color: var(--hearth-plum-deep);
+  background: none;
+  box-shadow: none;
+
+  letter-spacing: 0.2em;
+  transform: none;
+}
+
+.brand-name::before,
+.home-heading h1::after {
+  display: none;
+}
+
+.home-heading h1 {
+  color: #2f272b;
+  font-size: clamp(2.55rem, 5vw, 4.35rem);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.32);
+}
+
+.today-date {
+  margin-top: 10px;
+  padding: 0;
+
+  border: 0;
+
+  color: var(--hearth-ink-soft);
+}
+
+.profile-button,
+.talk-to-home-button,
+.small-action-button,
+.journal-photo-button {
+  border: 1px solid rgba(255, 255, 255, 0.36);
+  border-radius: 999px;
+
+  color: var(--hearth-plum-deep);
+  background: rgba(255, 248, 239, 0.24);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.48),
+    0 8px 20px rgba(31, 18, 24, 0.12);
+
+  backdrop-filter: blur(16px) saturate(135%);
+  -webkit-backdrop-filter: blur(16px) saturate(135%);
+
+  transform: none;
+}
+
+.profile-avatar {
+  background: linear-gradient(145deg, var(--hearth-plum), var(--hearth-plum-deep));
+}
+
+/* NOTE FROM HOME */
+.home-voice {
+  min-height: 112px;
+  padding: 22px 24px;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 242, 219, 0.3),
+      rgba(134, 82, 99, 0.16)
+    );
+
+  transform: none;
+}
+
+.home-voice::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+
+  border: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 9% 18%, rgba(191, 139, 72, 0.13), transparent 28%);
+
+  content: "";
+  transform: none;
+}
+
+.home-voice::after {
+  display: none;
+}
+
+.home-symbol {
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 50%;
+
+  color: var(--hearth-brass);
+  background: rgba(255, 247, 230, 0.24);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    0 8px 18px rgba(47, 28, 20, 0.1);
+
+  transform: none;
+}
+
+/* MAIN PANELS */
+.today-panel,
+.journal-panel {
+  border-radius: 28px;
+  transform: none;
+}
+
+.today-panel {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 242, 221, 0.32),
+      rgba(105, 116, 93, 0.15)
+    );
+}
+
+.today-panel::before,
+.journal-panel::before {
+  display: none;
+}
+
+.journal-panel {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 249, 238, 0.3),
+      rgba(105, 74, 103, 0.14)
+    );
+}
+
+/* EXPLICIT CONTRAST — nothing pale on pale. */
+.home,
+.home button,
+.home textarea,
+.home input {
+  color: var(--hearth-ink);
+}
+
+.home-heading h1,
+.home-message h2,
+.panel-header h2,
+.shelves-header h2,
+.quest-title,
+.gratitude-header h3,
+.completed-quests-title,
+.shelf-card strong {
+  color: var(--hearth-plum-deep);
+}
+
+.section-label,
+.brand-name,
+.quest-difficulty-label {
+  color: var(--hearth-burgundy);
+}
+
+.today-date,
+.home-message p:last-child,
+.quest-summary,
+.journal-status,
+.signal-label,
+.signal-message,
+.quest-note,
+.quest-house-message,
+.quest-completed-message,
+.gratitude-status,
+.gratitude-item-text,
+.shelf-card p,
+.journal-text::placeholder,
+.gratitude-section textarea::placeholder {
+  color: var(--hearth-ink-soft);
+  opacity: 1;
+}
+
+.panel-header::after {
+  background: linear-gradient(90deg, rgba(191, 139, 72, 0.3), rgba(105, 75, 104, 0.18), transparent);
+}
+
+/* SMALL GLASS CONTROLS */
+.signal-button,
+.quest-item,
+.gentle-empty-state,
+.gratitude-section textarea,
+.shelf-card {
+  border: 1px solid rgba(255, 255, 255, 0.27);
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 249, 239, 0.28),
+      rgba(226, 207, 196, 0.15)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    0 7px 18px rgba(35, 21, 25, 0.1);
+
+  backdrop-filter: blur(14px) saturate(132%);
+  -webkit-backdrop-filter: blur(14px) saturate(132%);
+}
+
+.signal-button {
+  min-height: 60px;
+  border-radius: 18px;
+}
+
+.signal-group:nth-child(n) .signal-button,
+.quest-item:nth-child(n),
+.shelf-card:nth-child(n) {
+  transform: none;
+}
+
+.signal-group:nth-child(1) .signal-emoji {
+  background: rgba(150, 95, 112, 0.2);
+}
+
+.signal-group:nth-child(2) .signal-emoji {
+  background: rgba(100, 118, 91, 0.2);
+}
+
+.signal-group:nth-child(3) .signal-emoji {
+  background: rgba(111, 135, 144, 0.2);
+}
+
+.signal-emoji {
+  border-radius: 50%;
+  transform: none;
+}
+
+.quests-section,
+.gratitude-section {
+  border-top: 1px solid rgba(75, 51, 62, 0.16);
+}
+
+.quest-item {
+  border-radius: 16px;
+}
+
+/* JOURNAL — plain translucent writing surface, no ruling. */
+.journal-editor {
+  position: relative;
+
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 22px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 250, 239, 0.27),
+      rgba(224, 203, 191, 0.13)
+    );
+
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 0 34px rgba(83, 48, 62, 0.025);
+
+  backdrop-filter: blur(15px) saturate(130%);
+  -webkit-backdrop-filter: blur(15px) saturate(130%);
+}
+
+.journal-editor::before {
+  display: none;
+}
+
+.journal-text {
+  padding-left: 0;
+  color: var(--hearth-ink);
+  text-shadow: none;
+}
+
+.primary-button {
+  border-radius: 999px;
+  background: linear-gradient(145deg, var(--hearth-moss), var(--hearth-moss-deep));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 10px 22px rgba(48, 66, 45, 0.2);
+}
+
+/* SHELVES */
+.shelves {
+  margin-top: 4px;
+  padding: 28px 26px 34px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(242, 222, 199, 0.27),
+      rgba(76, 51, 64, 0.19)
+    );
+}
+
+.shelves::before {
+  display: none;
+}
+
+.shelf-card {
+  min-height: 176px;
+  border-radius: 20px;
+}
+
+.shelf-card:nth-child(1) {
+  border-top: 3px solid rgba(105, 75, 104, 0.72);
+}
+
+.shelf-card:nth-child(2) {
+  border-top: 3px solid rgba(191, 139, 72, 0.76);
+}
+
+.shelf-card:nth-child(3) {
+  border-top: 3px solid rgba(100, 118, 91, 0.76);
+}
+
+.shelf-card > span {
+  border-radius: 50%;
+  background: rgba(255, 248, 235, 0.22);
+  transform: none;
+}
+
+@media (max-width: 680px) {
+  body {
+    background-attachment: scroll;
+    background-size: 560px auto;
+  }
+
+  .home-header,
+  .home-voice,
+  .today-panel,
+  .journal-panel,
+  .shelves {
+    border-radius: 22px;
+    backdrop-filter: blur(19px) saturate(132%);
+    -webkit-backdrop-filter: blur(19px) saturate(132%);
+  }
+
+  .journal-text {
+    padding-left: 0;
+  }
+
+  .shelves {
+    padding: 24px 14px 28px;
+  }
+}
+
+/* =================================================
+   READABILITY PATCH — HIGH-CONTRAST HEARTH TEXT
+   Keeps the wallpaper and Liquid Glass unchanged.
+================================================= */
+
+#home-room,
+#home-room button,
+#home-room input,
+#home-room textarea {
+  color: #2b2328 !important;
+}
+
+#home-room h1,
+#home-room h2,
+#home-room h3,
+#home-room h4,
+#home-room .brand-name,
+#home-room .section-label,
+#home-room .quest-title,
+#home-room .completed-quests-title,
+#home-room .shelf-card strong {
+  color: #3d293b !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+#home-room p,
+#home-room label,
+#home-room span,
+#home-room .today-date,
+#home-room .quest-summary,
+#home-room .journal-status,
+#home-room .signal-label,
+#home-room .signal-message,
+#home-room .quest-note,
+#home-room .quest-house-message,
+#home-room .quest-completed-message,
+#home-room .gratitude-status,
+#home-room .gratitude-item-text,
+#home-room .shelf-card p,
+#home-room .completed-quest-count {
+  color: #51454d !important;
+  opacity: 1 !important;
+}
+
+#home-room .quest-difficulty-label,
+#home-room .section-label,
+#home-room .brand-name {
+  color: #6d4055 !important;
+  opacity: 1 !important;
+}
+
+#home-room .quest-menu-button,
+#home-room .gratitude-menu-button,
+#home-room .shelf-card button {
+  color: #4b3e45 !important;
+  opacity: 1 !important;
+}
+
+#home-room textarea::placeholder,
+#home-room input::placeholder,
+#home-room .journal-text::placeholder,
+#home-room .gratitude-section textarea::placeholder {
+  color: #6b5d64 !important;
+  opacity: 1 !important;
+}
+
+#home-room .primary-button,
+#home-room .primary-button span,
+#home-room .gratitude-save-button,
+#home-room .gratitude-save-button span {
+  color: #fff9ef !important;
+  text-shadow: 0 1px 1px rgba(28, 20, 18, 0.2);
+}
+
+#home-room .talk-to-home-button,
+#home-room .small-action-button,
+#home-room .journal-photo-button,
+#home-room .profile-button {
+  color: #382b35 !important;
+  opacity: 1 !important;
+}
+
+#home-room .quest-item,
+#home-room .signal-button,
+#home-room .shelf-card,
+#home-room .journal-editor,
+#home-room .gratitude-section textarea {
+  color: #2f272b !important;
+}
+
+
+/* =========================================
+   CONTRAST PATCH 2 — readable glass surfaces
+   Keeps wallpaper, improves text visibility.
+========================================= */
+
+:root {
+  --hearth-ink: #241d22;
+  --hearth-ink-soft: #473c43;
+  --hearth-ink-faint: #64555e;
+  --hearth-plum-deep: #3f2d3c;
+  --hearth-burgundy: #78495f;
+}
+
+.home-header,
+.home-voice,
+.today-panel,
+.journal-panel,
+.shelves {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 248, 239, 0.42),
+      rgba(170, 136, 145, 0.24)
+    );
+}
+
+.home-voice {
+  background:
+    linear-gradient(
+      120deg,
+      rgba(255, 244, 225, 0.40),
+      rgba(145, 96, 112, 0.20)
+    );
+}
+
+.today-panel {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 244, 225, 0.40),
+      rgba(120, 132, 105, 0.18)
+    );
+}
+
+.journal-panel {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 248, 239, 0.40),
+      rgba(126, 93, 123, 0.18)
+    );
+}
+
+.shelves {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(250, 234, 214, 0.36),
+      rgba(95, 64, 79, 0.22)
+    );
+}
+
+.signal-button,
+.quest-item,
+.gentle-empty-state,
+.gratitude-section textarea,
+.shelf-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 251, 243, 0.54),
+      rgba(233, 216, 206, 0.24)
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    0 8px 18px rgba(35, 21, 25, 0.10);
+}
+
+.journal-editor {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 251, 243, 0.50),
+      rgba(231, 212, 201, 0.22)
+    );
+}
+
+#home-room,
+#home-room button,
+#home-room input,
+#home-room textarea {
+  color: #261f24 !important;
+}
+
+#home-room h1,
+#home-room h2,
+#home-room h3,
+#home-room h4,
+#home-room .brand-name,
+#home-room .section-label,
+#home-room .quest-title,
+#home-room .completed-quests-title,
+#home-room .shelf-card strong,
+#home-room .home-message h2,
+#home-room .panel-header h2,
+#home-room .shelves-header h2,
+#home-room .gratitude-header h3 {
+  color: #412d3f !important;
+}
+
+#home-room p,
+#home-room label,
+#home-room span,
+#home-room .today-date,
+#home-room .quest-summary,
+#home-room .journal-status,
+#home-room .signal-label,
+#home-room .signal-message,
+#home-room .quest-note,
+#home-room .quest-house-message,
+#home-room .quest-completed-message,
+#home-room .gratitude-status,
+#home-room .gratitude-item-text,
+#home-room .shelf-card p,
+#home-room .completed-quest-count,
+#home-room .home-message p,
+#home-room .journal-text,
+#home-room .journal-text::placeholder,
+#home-room #gratitude-input,
+#home-room #gratitude-input::placeholder {
+  color: #493d44 !important;
+}
+
+#home-room .quest-difficulty-label,
+#home-room .section-label,
+#home-room .brand-name {
+  color: #7b4a60 !important;
+}
+
+#home-room .signal-button,
+#home-room .quest-item,
+#home-room .shelf-card,
+#home-room .gratitude-section textarea,
+#home-room .journal-editor {
+  color: #2e252b !important;
+}
+
+#home-room .quest-item .quest-note,
+#home-room .quest-item .quest-house-message,
+#home-room .quest-item .quest-difficulty-label,
+#home-room .shelf-card p,
+#home-room .signal-message,
+#home-room .journal-status,
+#home-room .gratitude-status {
+  font-weight: 500;
+}
+
+
+/* =========================================
+   CONTRAST PATCH 3 — darker headings & labels
+========================================= */
+#home-room .brand-name,
+#home-room .section-label,
+#home-room .panel-header h2,
+#home-room .shelves-header h2,
+#home-room .gratitude-header h3,
+#home-room .home-message h2,
+#home-room .quest-title,
+#home-room .completed-quests-title,
+#home-room .shelf-card strong {
+  color: #2f2230 !important;
+  text-shadow: 0 1px 0 rgba(255, 250, 242, 0.10);
+}
+
+#home-room .brand-name,
+#home-room .section-label,
+#home-room .quest-difficulty-label {
+  color: #5f3c52 !important;
+  font-weight: 700;
+}
+
+#home-room .today-date,
+#home-room .quest-summary,
+#home-room .journal-status,
+#home-room .signal-label,
+#home-room .signal-message,
+#home-room .quest-note,
+#home-room .quest-house-message,
+#home-room .quest-completed-message,
+#home-room .gratitude-status,
+#home-room .gratitude-item-text,
+#home-room .shelf-card p,
+#home-room .completed-quest-count,
+#home-room .home-message p,
+#home-room .journal-text,
+#home-room .journal-text::placeholder,
+#home-room #gratitude-input,
+#home-room #gratitude-input::placeholder,
+#home-room .small-action-button,
+#home-room .journal-photo-button,
+#home-room .profile-button,
+#home-room .talk-to-home-button {
+  color: #3a3136 !important;
+}
+
+#home-room .panel-header,
+#home-room .shelves-header,
+#home-room .gratitude-header {
+  color: #2f2230 !important;
+}
+
+
+/* =========================================
+   QUEST + GRATITUDE READABILITY PATCH
+========================================= */
+#home-room .today-panel .section-label,
+#home-room .gratitude-header .section-label,
+#home-room .completed-quests-title,
+#home-room .quest-summary,
+#home-room .quest-difficulty-label {
+  color: #5a3348 !important;
+  opacity: 1;
+}
+
+#home-room .quest-title,
+#home-room .gratitude-header h3,
+#home-room .gratitude-item-text,
+#home-room .completed-quests-title {
+  color: #2b2029 !important;
+}
+
+#home-room .quest-note,
+#home-room .quest-house-message,
+#home-room .quest-completed-message,
+#home-room .gratitude-status,
+#home-room .gratitude-item-text,
+#home-room #gratitude-input,
+#home-room #gratitude-input::placeholder {
+  color: #372d33 !important;
+}
+
+#home-room .quest-note,
+#home-room .quest-house-message,
+#home-room .quest-completed-message,
+#home-room .gratitude-item-text {
+  font-weight: 500;
+}
+
+#home-room .quest-item {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 251, 243, 0.62),
+      rgba(235, 220, 210, 0.32)
+    );
+}
+
+#home-room .quest-item.is-completed {
+  opacity: 0.90;
+  background:
+    linear-gradient(
+      145deg,
+      rgba(244, 247, 239, 0.76),
+      rgba(224, 229, 215, 0.42)
+    );
+}
+
+#home-room .quest-item.is-completed .quest-title,
+#home-room .quest-item.is-completed .quest-completed-message {
+  color: #4a4044 !important;
+}
+
+#home-room .completed-quest-count {
+  color: #352933 !important;
+  background: rgba(239, 244, 235, 0.84);
+}
+
+#home-room .gratitude-section textarea {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 251, 243, 0.68),
+      rgba(233, 216, 206, 0.34)
+    ) !important;
+  color: #2f252b !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.58),
+    0 8px 18px rgba(35, 21, 25, 0.10);
+}
+
+#home-room #gratitude-input::placeholder {
+  color: #5b4c54 !important;
+}
+
+/* ===== styles/rooms/hearth/hearth-illustrations.css ===== */
+/*
+  Reserved for layered room assets: window, garden, cat, light, and seasonal details.
+  Intentionally empty during the no-visual-change migration.
+*/

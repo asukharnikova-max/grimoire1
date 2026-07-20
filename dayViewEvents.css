@@ -1,0 +1,273 @@
+/* EVENTS + DAY VIEW ADDITIONS */
+.home-quick-create-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.home-add-event-button,.day-view-add-event,.calendar-add-event-button{border-color:rgba(115,130,102,.42);color:#fffdf8;background:linear-gradient(145deg,var(--sage),var(--sage-dark));box-shadow:0 8px 18px rgba(88,104,78,.16)}
+.home-add-event-button:hover,.day-view-add-event:hover,.calendar-add-event-button:hover{color:#fffdf8;background:linear-gradient(145deg,var(--sage),var(--sage-dark));box-shadow:0 11px 22px rgba(88,104,78,.22)}
+.day-view-events{display:grid;gap:10px}.day-view-event{display:grid;grid-template-columns:40px minmax(0,1fr);gap:12px;align-items:start;padding:14px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.5);box-shadow:inset 0 1px 0 rgba(255,255,255,.72)}
+.day-view-event-emoji{display:grid;place-items:center;width:38px;height:38px;border-radius:13px;background:rgba(223,229,216,.72);font-size:1.08rem}.day-view-event-content{min-width:0}.day-view-event-content strong,.day-view-event-content small{display:block}.day-view-event-content strong{font-family:Georgia,"Times New Roman",serif;font-size:1rem;font-weight:600}.day-view-event-content small{margin-top:4px;color:var(--text-faint)}.day-view-event-content p{margin:8px 0 0;color:var(--text-soft);line-height:1.5}
+.day-view-events-warning{margin:0;padding:12px 13px;border:1px solid rgba(184,137,82,.22);border-radius:13px;color:var(--text-soft);background:rgba(232,207,171,.17);font-size:.82rem;line-height:1.45}
+.day-view-journal-editor{display:grid;gap:12px;margin-top:15px;padding:16px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(155deg,rgba(255,255,255,.66),rgba(241,235,225,.5))}.day-view-journal-editor textarea{box-sizing:border-box;width:100%;min-height:170px;padding:14px 15px;border:1px solid var(--line);border-radius:15px;color:var(--text);background:rgba(255,255,255,.75);font:inherit;line-height:1.58;resize:vertical}.day-view-journal-editor textarea:focus{border-color:rgba(115,130,102,.48);background:rgba(255,255,255,.94);box-shadow:0 0 0 4px rgba(115,130,102,.1);outline:none}.day-view-journal-editor-actions{display:flex;justify-content:flex-end;gap:9px}.day-view-journal-save{color:#fffdf8;border:none;background:linear-gradient(145deg,var(--sage),var(--sage-dark));box-shadow:0 8px 18px rgba(88,104,78,.16)}.day-view-journal-editor-status{min-height:1.2em;margin:0;color:var(--text-faint);font-size:.78rem}
+.calendar-event-dialog{width:min(610px,calc(100vw - 28px));max-height:min(820px,calc(100dvh - 28px));margin:auto;padding:0;overflow:hidden;color:var(--text);background:radial-gradient(circle at top right,rgba(213,187,225,.24),transparent 34%),radial-gradient(circle at bottom left,rgba(194,214,188,.26),transparent 38%),linear-gradient(155deg,#fffaf2 0%,#f5ede3 100%);border:1px solid var(--line-strong);border-radius:28px;box-shadow:0 30px 86px rgba(63,49,39,.26),0 8px 24px rgba(63,49,39,.1),inset 0 1px 0 rgba(255,255,255,.8)}.calendar-event-dialog::backdrop{background:rgba(54,44,38,.46);backdrop-filter:blur(8px)}.calendar-event-dialog[open]{animation:house-window-in 190ms ease-out}.calendar-event-form{max-height:inherit;padding:24px 26px 26px;overflow-y:auto}.calendar-event-dialog-header{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:-24px -26px 23px;padding:24px 26px 20px;background:rgba(255,250,242,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(14px)}.calendar-event-dialog-header h2{margin:3px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.35rem,3vw,1.85rem);font-weight:600}.calendar-event-dialog-note{margin:7px 0 0;color:var(--text-soft);font-size:.84rem;line-height:1.45}.calendar-event-field{display:grid;gap:7px;margin-bottom:18px}.calendar-event-field>span{color:var(--text-soft);font-size:.78rem;font-weight:750}.calendar-event-field input,.calendar-event-field textarea,.calendar-event-field select{box-sizing:border-box;width:100%;min-height:48px;padding:13px 14px;border:1px solid var(--line);border-radius:14px;color:var(--text);background:rgba(255,255,255,.62);font:inherit;line-height:1.5}.calendar-event-field textarea{min-height:100px;resize:vertical}.calendar-event-field input:focus,.calendar-event-field textarea:focus,.calendar-event-field select:focus{border-color:rgba(115,130,102,.48);background:rgba(255,255,255,.9);box-shadow:0 0 0 4px rgba(115,130,102,.1);outline:none}.calendar-event-date-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.calendar-event-actions{position:sticky;bottom:-26px;z-index:4;display:flex;align-items:center;justify-content:flex-end;gap:10px;margin:23px -26px -26px;padding:16px 26px 20px;background:rgba(255,250,242,.9);border-top:1px solid var(--line);backdrop-filter:blur(14px)}.calendar-event-cancel,.calendar-event-save{min-height:44px;padding:11px 16px;border-radius:999px;font:inherit;font-size:.88rem;font-weight:700;cursor:pointer}.calendar-event-cancel{border:1px solid var(--line-strong);color:var(--text-soft);background:transparent}.calendar-event-save{border:none;color:#fffdf8;background:linear-gradient(145deg,var(--sage),var(--sage-dark));box-shadow:0 10px 20px rgba(88,104,78,.18)}.calendar-event-form-status{min-height:1.2em;margin:2px 0 0;color:#8a4f56;font-size:.79rem;line-height:1.4}
+@media(max-width:620px){.home-quick-create-actions{justify-content:flex-start}.calendar-event-dialog{width:calc(100vw - 18px);max-height:calc(100dvh - 18px);border-radius:22px}.calendar-event-form{padding:19px 18px 20px}.calendar-event-dialog-header{margin:-19px -18px 20px;padding:19px 18px 16px}.calendar-event-date-row{grid-template-columns:1fr;gap:0}.calendar-event-actions{bottom:-20px;margin:21px -18px -20px;padding:14px 18px 16px}}
+
+/* Calendar event form: safe date fields on iPad and narrow layouts */
+.calendar-event-date-row > .calendar-event-field {
+  min-width: 0;
+}
+
+.calendar-event-date-row input[type="date"] {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 700px) {
+  .calendar-event-date-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+
+/* =================================================
+   EVENTS + EDITORS ATMOSPHERE 2
+================================================= */
+
+.home-add-event-button,
+.day-view-add-event,
+.calendar-add-event-button,
+.day-view-journal-save {
+  border-radius: 7px 16px 7px 16px;
+
+  background:
+    linear-gradient(
+      145deg,
+      var(--peacock),
+      var(--peacock-dark)
+    );
+
+  box-shadow:
+    0 5px 0 rgba(40, 88, 90, 0.14),
+    0 10px 20px rgba(40, 88, 90, 0.16);
+}
+
+.day-view-event {
+  border-color: rgba(112, 67, 87, 0.14);
+  border-radius: 8px 18px 9px 15px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 249, 234, 0.78),
+      rgba(236, 217, 199, 0.68)
+    );
+}
+
+.day-view-event-emoji {
+  border-radius: 50% 42% 48% 44%;
+
+  background:
+    rgba(190, 216, 205, 0.66);
+}
+
+.day-view-journal-editor {
+  border-color: rgba(116, 74, 43, 0.15);
+  border-radius: 7px 18px 8px 15px;
+
+  background:
+    radial-gradient(
+      circle at 87% 15%,
+      transparent 0 17px,
+      rgba(116, 74, 43, 0.11) 18px 20px,
+      transparent 21px
+    ),
+    linear-gradient(
+      145deg,
+      #fff8e6,
+      #ecd3ad
+    );
+}
+
+.day-view-journal-editor textarea {
+  border-color: rgba(116, 74, 43, 0.14);
+  border-radius: 5px 13px 6px 12px;
+
+  background:
+    repeating-linear-gradient(
+      180deg,
+      rgba(255, 250, 237, 0.82) 0 30px,
+      rgba(53, 111, 112, 0.08) 31px,
+      rgba(255, 250, 237, 0.82) 32px
+    );
+}
+
+.calendar-event-dialog {
+  border-color: rgba(63, 48, 72, 0.2);
+
+  background:
+    radial-gradient(
+      circle at 93% 6%,
+      rgba(154, 82, 96, 0.16),
+      transparent 25%
+    ),
+    radial-gradient(
+      circle at 7% 94%,
+      rgba(53, 111, 112, 0.14),
+      transparent 27%
+    ),
+    linear-gradient(
+      155deg,
+      #fff5df,
+      #e8cfad
+    );
+}
+
+.calendar-event-dialog-header,
+.calendar-event-actions {
+  background:
+    rgba(255, 244, 221, 0.9);
+}
+
+.calendar-event-field input,
+.calendar-event-field textarea,
+.calendar-event-field select {
+  border-color: rgba(112, 67, 87, 0.15);
+  border-radius: 7px 15px 8px 13px;
+
+  background:
+    rgba(255, 249, 233, 0.76);
+}
+
+.calendar-event-cancel,
+.calendar-event-save {
+  border-radius: 7px 16px 7px 16px;
+}
+
+.calendar-event-save {
+  background:
+    linear-gradient(
+      145deg,
+      var(--peacock),
+      var(--peacock-dark)
+    );
+}
+
+
+/* =========================================
+   LIQUID GLASS POPUPS — CALENDAR EVENT DIALOG
+========================================= */
+.calendar-event-dialog {
+  color: #30262d;
+  background:
+    radial-gradient(circle at 18% 16%, rgba(255, 249, 240, 0.92), transparent 32%),
+    radial-gradient(circle at 86% 18%, rgba(174, 137, 147, 0.16), transparent 28%),
+    radial-gradient(circle at 78% 84%, rgba(120, 136, 106, 0.14), transparent 28%),
+    linear-gradient(145deg, rgba(255, 248, 241, 0.92), rgba(217, 196, 199, 0.56));
+  border: 1px solid rgba(255, 255, 255, 0.40);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.56),
+    0 24px 54px rgba(26, 14, 18, 0.34),
+    0 8px 20px rgba(26, 14, 18, 0.16);
+  backdrop-filter: blur(26px) saturate(135%);
+  -webkit-backdrop-filter: blur(26px) saturate(135%);
+}
+
+.calendar-event-dialog::backdrop {
+  background: rgba(25, 15, 17, 0.46);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.calendar-event-dialog-header,
+.calendar-event-actions {
+  background: rgba(255, 248, 241, 0.54);
+  border-color: rgba(122, 96, 108, 0.12);
+}
+
+.calendar-event-dialog-header h2,
+.calendar-event-field > span {
+  color: #2f202b;
+}
+
+.calendar-event-dialog-note {
+  color: #65575f;
+}
+
+.calendar-event-field input,
+.calendar-event-field textarea,
+.calendar-event-field select {
+  color: #342931;
+  background: linear-gradient(145deg, rgba(255, 252, 247, 0.82), rgba(238, 226, 218, 0.44));
+  border-color: rgba(122, 96, 108, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.56);
+}
+
+.calendar-event-field input::placeholder,
+.calendar-event-field textarea::placeholder {
+  color: #65555d;
+}
+
+.calendar-event-cancel {
+  color: #4a3b44;
+  background: rgba(255,255,255,0.46);
+  border-color: rgba(122, 96, 108, 0.16);
+}
+
+.calendar-event-form-status {
+  color: #7f4a5d;
+}
+
+/* =========================================
+   DAY VIEW — CARD / EDITOR GLASS OVERRIDES
+========================================= */
+.day-view-event {
+  color: #352932;
+  background: linear-gradient(145deg, rgba(255, 252, 247, 0.78), rgba(242, 232, 224, 0.46));
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.50);
+}
+
+.day-view-events-warning {
+  background: linear-gradient(145deg, rgba(255, 248, 241, 0.72), rgba(235, 223, 214, 0.42));
+  border-color: rgba(255,255,255,0.28);
+}
+
+.day-view-journal-editor {
+  border: 1px solid rgba(255, 255, 255, 0.30);
+  background: linear-gradient(145deg, rgba(255, 252, 247, 0.72), rgba(236, 223, 214, 0.44));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.46);
+  backdrop-filter: blur(18px) saturate(125%);
+  -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.day-view-journal-editor textarea {
+  color: #342931;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.72), rgba(245, 237, 231, 0.46));
+  border-color: rgba(122, 96, 108, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.56);
+}
+
+.day-view-journal-editor textarea::placeholder {
+  color: #6d5b64;
+}
+
+.day-view-section .day-view-add-event,
+.day-view-journal-save {
+  color: #4a3943;
+  background: rgba(228, 209, 218, 0.64);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.44),
+    0 8px 18px rgba(33, 20, 27, 0.08);
+}
+
+.day-view-section .day-view-add-event:hover,
+.day-view-section .day-view-add-event:focus-visible,
+.day-view-journal-save:hover,
+.day-view-journal-save:focus-visible {
+  color: #3f3139;
+  background: rgba(236, 219, 227, 0.84);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.52),
+    0 10px 20px rgba(33, 20, 27, 0.12);
+}
