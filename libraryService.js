@@ -956,6 +956,25 @@ class LibraryService {
     return result.items ?? [];
   }
 
+  async deleteReadingList(readingListId) {
+    await this.request(
+      "reading-lists",
+      {
+        method: "DELETE",
+        query: {
+          id: readingListId,
+        },
+      },
+    );
+
+    this.emit(
+      "library:list-removed",
+      {
+        listId: readingListId,
+      },
+    );
+  }
+
   async createDictionaryEntry(data) {
     const result =
       await this.request(

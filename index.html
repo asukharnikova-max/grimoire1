@@ -17,7 +17,9 @@
 <link href="./library.css?v=13" rel="stylesheet"/></head>
 <body>
 <main class="home">
-<header class="home-header">
+<div class="app-room" data-room="home" id="home-room">
+<section aria-labelledby="home-message-title" class="home-voice">
+<div class="home-navigation">
 <button aria-expanded="false" aria-label="Open navigation" class="navigation-button" id="navigation-button" type="button">
           ☰
         </button>
@@ -28,44 +30,20 @@
 <a data-room-link="movies" href="#movies">🎬 Movies &amp; Series</a>
 <a data-room-link="crafts" href="#crafts">🧵 Crafts</a>
 <a data-room-link="calendar" href="#calendar">📅 Calendar</a>
-<a data-room-link="profile" href="#profile">👤 Profile</a></nav>
-<div class="home-heading">
-<p class="brand-name">
-            Grimoire
-          </p>
-<h1>Home</h1>
-<p class="today-date" id="today-date">
-            Your day is waking up…
-          </p>
+<a data-room-link="profile" href="#profile">👤 Profile</a>
+</nav>
 </div>
-<button aria-label="Open Sasha's profile" class="profile-button" id="profile-button" type="button">
-<span aria-hidden="true" class="profile-avatar">
-            S
-          </span>
-<span class="profile-name">
-            Sasha
-          </span>
-</button>
-</header>
-<div class="app-room" data-room="home" id="home-room">
-<section aria-labelledby="home-message-title" class="home-voice">
-<div aria-hidden="true" class="home-symbol">
-          ✦
-        </div>
 <div class="home-message">
-<p class="section-label">
-            A note from Home
-          </p>
-<h2 id="home-message-title">
-            Welcome home.
-          </h2>
-<p id="home-message-text">
-            Everything is exactly where you left it.
-          </p>
+<h2 id="home-message-title">Welcome home.</h2>
+<p class="home-date" id="home-date">Wednesday, 30 September</p>
 </div>
-<button class="talk-to-home-button" id="talk-to-home-button" type="button">
-          Talk to your Home…
-        </button>
+<div class="home-correspondence-actions">
+          <button aria-label="Open conversation with the House, 1 unread message" class="house-mail-button" id="house-mail-button" type="button">
+            <span aria-hidden="true" class="house-mail-icon">✉️</span>
+            <span class="house-mail-label">House</span>
+            <span aria-label="1 unread message" class="house-mail-badge" id="house-mail-badge">1</span>
+          </button>
+        </div>
 </section>
 <section aria-label="Today's workspace" class="daily-workspace">
 <article aria-labelledby="today-title" class="today-panel">
@@ -170,54 +148,31 @@
 <div aria-label="Completed quests" class="quest-list completed-quest-list" id="completed-quest-list"></div>
 </section>
 </section>
-<section aria-labelledby="gratitude-title" class="gratitude-section">
-<header class="gratitude-header">
-<div>
-<p class="section-label">
-                  A small bright thing
-                </p>
-<h3 id="gratitude-title">
-                  A little gratitude
-                </h3>
-</div>
-<span aria-live="polite" class="gratitude-status" id="gratitude-status" role="status"></span>
-</header>
-<div class="gratitude-saved" hidden="" id="gratitude-saved">
-<div aria-label="Today's gratitude" class="gratitude-saved-text" id="gratitude-saved-text" role="list"></div>
-</div>
-<textarea id="gratitude-input" placeholder="Waiting for your words" rows="2"></textarea>
-<div class="gratitude-actions">
-<button class="primary-button gratitude-save-button" id="save-gratitude-button" type="button">
-                Keep this memory
-              </button>
-</div>
-</section>
 </article>
 <article aria-labelledby="journal-title" class="journal-panel">
 <header class="panel-header">
 <div>
 <p class="section-label">
-                Today’s page
+                Things on your mind
               </p>
 <h2 id="journal-title">
-                Journal
+                Leave it here.
               </h2>
+<p>
+                Thoughts, plans, reminders, nonsense. The House will sort it out.
+              </p>
 </div>
 <span class="journal-status" id="journal-status">
               Waiting for your words
             </span>
 </header>
 <div class="journal-editor" id="journal-editor">
-<textarea class="journal-text" id="journal-text" placeholder="You can leave your thoughts here. The house will keep them safe."></textarea>
+<textarea class="journal-text" id="journal-text" placeholder="Leave whatever is in your head here…"></textarea>
 <div aria-live="polite" class="journal-media" id="journal-media"></div>
 </div>
 <footer class="journal-actions">
-<label class="journal-photo-button" for="journal-photo-input">
-              Add photo
-            </label>
-<input accept="image/*" hidden="" id="journal-photo-input" multiple="" type="file"/>
 <button class="primary-button" id="save-journal-button" type="button">
-              Keep today’s page
+              Leave it with the House
             </button>
 </footer>
 </article>
@@ -276,6 +231,23 @@
 
 <section aria-labelledby="library-room-title" class="app-room library-room" data-room="library" hidden="" id="library-room">
 <section aria-labelledby="library-message-title" class="home-voice library-intro">
+<div class="home-navigation">
+<button aria-expanded="false" aria-label="Open navigation" class="navigation-button" type="button">
+          ☰
+        </button>
+<a aria-label="Return home" class="home-button" data-room-link="home" href="#home">
+          🏠
+        </a>
+<nav class="navigation-menu" hidden="">
+<a data-room-link="home" href="#home">🏡 Home</a>
+<a data-room-link="library" href="#library">📚 Library</a>
+<a data-room-link="recipes" href="#recipes">🍲 Recipes</a>
+<a data-room-link="movies" href="#movies">🎬 Movies &amp; Series</a>
+<a data-room-link="crafts" href="#crafts">🧵 Crafts</a>
+<a data-room-link="calendar" href="#calendar">📅 Calendar</a>
+<a data-room-link="profile" href="#profile">👤 Profile</a>
+</nav>
+</div>
 <div aria-hidden="true" class="home-symbol">✦</div>
 <div class="home-message">
 <p class="section-label">A note from Home</p>
@@ -535,6 +507,38 @@
 <footer class="library-form-actions"><button class="secondary-button" id="library-item-cancel" type="button">Leave it for now</button><button class="primary-button" type="submit">Keep this story</button></footer>
 </form>
 </dialog>
+<dialog aria-labelledby="house-chat-title" class="house-chat-dialog" id="house-chat-dialog">
+  <div class="house-chat-shell">
+    <header class="house-chat-header">
+      <div class="house-chat-identity">
+        <div aria-hidden="true" class="house-chat-avatar">✦</div>
+        <div>
+          <h2 id="house-chat-title">The House</h2>
+          <p>usually around, occasionally judgmental</p>
+        </div>
+      </div>
+      <button aria-label="Close conversation" class="dialog-close-button house-chat-close" id="house-chat-close" type="button">×</button>
+    </header>
+
+    <div aria-live="polite" class="house-chat-messages" id="house-chat-messages">
+      <div class="house-chat-day-divider"><span>Today</span></div>
+
+      <article class="house-chat-message is-house" data-sender="house">
+        <div class="house-chat-bubble">
+          <p>Morning. Your day looks suspiciously undocumented. What’s lurking?</p>
+          <time datetime="">08:12</time>
+        </div>
+      </article>
+
+    </div>
+
+    <form class="house-chat-composer" id="house-chat-form">
+      <label class="sr-only" for="house-chat-input">Write to the House</label>
+      <textarea autocomplete="off" id="house-chat-input" name="message" placeholder="Write to the House…" rows="1"></textarea>
+      <button aria-label="Send message" class="house-chat-send" id="house-chat-send" type="submit">➤</button>
+    </form>
+  </div>
+</dialog>
 <script src="./app.js?v=5" type="module"></script>
 <script src="./quests.js" type="module"></script>
 <script src="./navigation.js?v=2" type="module"></script>
@@ -552,6 +556,6 @@
     <div id="library-word-dialog-body"><h2 id="library-word-dialog-title">Word</h2></div>
   </div>
 </dialog>
-<script src="./library.js?v=25" type="module"></script>
+<script src="./library.js?v=29" type="module"></script>
 <dialog class="calendar-day-dialog house-window" id="calendar-day-dialog"><div class="house-window__shell"><header class="house-window__header"><div class="house-window__heading"><div class="house-window__symbol">✦</div><div class="house-window__titles"><p class="house-window__eyebrow">The House remembers</p><h2 class="house-window__title" id="calendar-day-dialog-title">Day</h2><p class="house-window__subtitle">Every memory has a place.</p></div></div><button class="house-window__close" id="calendar-day-dialog-close" type="button">×</button></header><div class="house-window__content" id="calendar-day-dialog-content"></div></div></dialog><script src="./dayView.js?v=3" type="module"></script></body>
 </html>

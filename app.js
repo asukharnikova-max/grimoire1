@@ -18,6 +18,9 @@ import {
   
   const JOURNAL_API_URL =
     "https://functions.yandexcloud.net/d4eumehm2lk051cplv2n";
+
+  const HOUSE_AI_URL =
+    "https://functions.yandexcloud.net/d4e2pa4a3eddbai3kq3m";
   
   
   const ACCESS_KEY_STORAGE =
@@ -117,6 +120,41 @@ const STORAGE_PREFIX = "grimoire-day";
       emoji: "✨",
       label: "A clear night",
     },
+    {
+      key: "freezing",
+      emoji: "🥶",
+      label: "Freezing",
+    },
+    {
+      key: "cold",
+      emoji: "❄️",
+      label: "Cold",
+    },
+    {
+      key: "cool",
+      emoji: "🌬️",
+      label: "Cool",
+    },
+    {
+      key: "mild",
+      emoji: "🌿",
+      label: "Mild",
+    },
+    {
+      key: "warm",
+      emoji: "☀️",
+      label: "Warm",
+    },
+    {
+      key: "hot",
+      emoji: "🔥",
+      label: "Hot",
+    },
+    {
+      key: "very-hot",
+      emoji: "🫠",
+      label: "Very hot",
+    },
   ];
   
   const elements = {
@@ -161,6 +199,16 @@ const STORAGE_PREFIX = "grimoire-day";
     weatherMessage:
       document.getElementById(
         "weather-message",
+      ),
+
+    houseMailButton:
+      document.getElementById(
+        "house-mail-button",
+      ),
+
+    houseMailBadge:
+      document.getElementById(
+        "house-mail-badge",
       ),
   };
   
@@ -1503,6 +1551,686 @@ function getTodayKey() {
   
 
 
+  function getHouseChatDialog() {
+    return document.getElementById(
+      "house-chat-dialog",
+    );
+  }
+
+  function getHouseChatInput() {
+    return document.getElementById(
+      "house-chat-input",
+    );
+  }
+
+  function getHouseChatForm() {
+    return document.getElementById(
+      "house-chat-form",
+    );
+  }
+
+  function formatHouseChatTime(
+    value = new Date(),
+  ) {
+    return new Intl.DateTimeFormat(
+      "en-GB",
+      {
+        hour: "2-digit",
+        minute: "2-digit",
+      },
+    ).format(value);
+  }
+
+  function appendHouseChatMessage(
+    sender,
+    text,
+  ) {
+    const messages =
+      document.getElementById(
+        "house-chat-messages",
+      );
+
+    if (!messages) {
+      return null;
+    }
+
+    const article =
+      document.createElement("article");
+
+    const normalizedSender =
+      sender === "user" ||
+      sender === "lance"
+        ? sender
+        : "house";
+
+    article.className =
+      `house-chat-message is-${normalizedSender}`;
+
+    article.dataset.sender =
+      normalizedSender;
+
+    const bubble =
+      document.createElement("div");
+
+    bubble.className =
+      "house-chat-bubble";
+
+    const paragraph =
+      document.createElement("p");
+
+    paragraph.textContent = text;
+
+    const time =
+      document.createElement("time");
+
+    const now = new Date();
+
+    time.dateTime = now.toISOString();
+    time.textContent =
+      formatHouseChatTime(now);
+
+    bubble.append(
+      paragraph,
+      time,
+    );
+
+    article.append(bubble);
+    messages.append(article);
+
+    messages.scrollTop =
+      messages.scrollHeight;
+
+    return article;
+  }
+
+  let houseChatBootstrapPromise = null;
+  let lanceContactState = "present";
+  let lanceContactPollTimer = null;
+  let lanceContactRequestPending = false;
+  let houseChatSendPending = false;
+
+  const LANCE_CONTACT_POLL_MS =
+    60 * 1000;
+
+  function normalizeLanceContactState(
+    value,
+  ) {
+    return value === "left"
+      ? "left"
+      : "present";
+  }
+
+  function renderLanceContactState() {
+    const input =
+      getHouseChatInput();
+
+    const form =
+      getHouseChatForm();
+
+    const sendButton =
+      form?.querySelector(
+        'button[type="submit"]',
+      );
+
+    const isLeft =
+      lanceContactState === "left";
+
+    const disabled =
+      isLeft || houseChatSendPending;
+
+    if (input) {
+      input.disabled = disabled;
+
+      input.placeholder = isLeft
+        ? "Lance is gone."
+        : "Write to Lance…";
+
+      input.setAttribute(
+        "aria-disabled",
+        String(disabled),
+      );
+    }
+
+    if (sendButton) {
+      sendButton.disabled = disabled;
+    }
+  }
+
+  function stopLanceContactPolling() {
+    if (!lanceContactPollTimer) {
+      return;
+    }
+
+    window.clearInterval(
+      lanceContactPollTimer,
+    );
+
+    lanceContactPollTimer = null;
+  }
+
+  function startLanceContactPolling() {
+    if (
+      lanceContactState !== "left" ||
+      lanceContactPollTimer
+    ) {
+      return;
+    }
+
+    lanceContactPollTimer =
+      window.setInterval(
+        () => {
+          void checkLanceInitiative();
+        },
+        LANCE_CONTACT_POLL_MS,
+      );
+  }
+
+  function setLanceContactState(
+    nextState,
+  ) {
+    lanceContactState =
+      normalizeLanceContactState(
+        nextState,
+      );
+
+    renderLanceContactState();
+
+    if (lanceContactState === "left") {
+      startLanceContactPolling();
+      return;
+    }
+
+    stopLanceContactPolling();
+  }
+
+  function getLanceMessagesFromResult(
+    result,
+  ) {
+    const messages =
+      Array.isArray(result?.messages)
+        ? result.messages
+            .map((item) =>
+              String(item || "").trim(),
+            )
+            .filter(Boolean)
+        : [];
+
+    if (messages.length) {
+      return messages;
+    }
+
+    const singleMessage =
+      typeof result?.message === "string"
+        ? result.message.trim()
+        : "";
+
+    if (singleMessage) {
+      return [singleMessage];
+    }
+
+    const reply =
+      typeof result?.reply === "string"
+        ? result.reply.trim()
+        : "";
+
+    return reply ? [reply] : [];
+  }
+
+  function renderLanceMessagesFromResult(
+    result,
+  ) {
+    const messages =
+      getLanceMessagesFromResult(
+        result,
+      );
+
+    for (const message of messages) {
+      appendHouseChatMessage(
+        "lance",
+        message,
+      );
+    }
+
+    return messages.length;
+  }
+
+  async function requestLanceContact(
+    requestType,
+  ) {
+    const response = await grimoireFetch(
+      HOUSE_AI_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+        },
+
+        body: JSON.stringify({
+          requestType,
+        }),
+      },
+    );
+
+    let result;
+
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error(
+        "Lance returned an unreadable response.",
+      );
+    }
+
+    if (!response.ok || !result?.ok) {
+      throw new Error(
+        result?.error ||
+          "Lance could not update the connection.",
+      );
+    }
+
+    return result;
+  }
+
+  async function syncLanceContactState() {
+    if (lanceContactRequestPending) {
+      return null;
+    }
+
+    lanceContactRequestPending = true;
+
+    try {
+      const result =
+        await requestLanceContact(
+          "contact_status",
+        );
+
+      setLanceContactState(
+        result?.contactState,
+      );
+
+      return result;
+    } finally {
+      lanceContactRequestPending = false;
+    }
+  }
+
+  async function checkLanceInitiative() {
+    if (
+      lanceContactState !== "left" ||
+      lanceContactRequestPending
+    ) {
+      return null;
+    }
+
+    lanceContactRequestPending = true;
+
+    try {
+      const result =
+        await requestLanceContact(
+          "initiative_check",
+        );
+
+      if (result?.initiated === true) {
+        renderLanceMessagesFromResult(
+          result,
+        );
+      }
+
+      setLanceContactState(
+        result?.contactState,
+      );
+
+      return result;
+    } catch (error) {
+      console.error(
+        "Lance initiative check failed:",
+        error,
+      );
+
+      return null;
+    } finally {
+      lanceContactRequestPending = false;
+    }
+  }
+
+  async function bootstrapHouseChat() {
+    if (houseChatBootstrapPromise) {
+      return houseChatBootstrapPromise;
+    }
+
+    houseChatBootstrapPromise = (async () => {
+      const response = await grimoireFetch(
+        HOUSE_AI_URL,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+
+          body: JSON.stringify({
+            requestType: "bootstrap",
+          }),
+        },
+      );
+
+      let result;
+
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error(
+          "Lance returned an unreadable response.",
+        );
+      }
+
+      if (!response.ok || !result?.ok) {
+        throw new Error(
+          result?.error ||
+            "Lance could not initialize.",
+        );
+      }
+
+      if (result?.created === true) {
+        renderLanceMessagesFromResult(
+          result,
+        );
+      }
+
+      if (result?.contactState) {
+        setLanceContactState(
+          result.contactState,
+        );
+      } else {
+        await syncLanceContactState();
+      }
+
+      return result;
+    })();
+
+    try {
+      return await houseChatBootstrapPromise;
+    } catch (error) {
+      houseChatBootstrapPromise = null;
+      throw error;
+    }
+  }
+
+  async function sendHouseChatMessage(
+    message,
+  ) {
+    if (
+      lanceContactState === "left" ||
+      houseChatSendPending
+    ) {
+      return;
+    }
+
+    houseChatSendPending = true;
+    renderLanceContactState();
+
+    appendHouseChatMessage(
+      "user",
+      message,
+    );
+
+    try {
+      const response =
+        await grimoireFetch(
+          HOUSE_AI_URL,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              requestType: "message",
+              message,
+            }),
+          },
+        );
+
+      let result;
+
+      try {
+        result = await response.json();
+      } catch {
+        throw new Error(
+          "Lance returned an unreadable response.",
+        );
+      }
+
+      if (
+        response.status === 409 &&
+        result?.code === "LANCE_AWAY"
+      ) {
+        setLanceContactState("left");
+        return;
+      }
+
+      if (
+        !response.ok ||
+        !result?.ok
+      ) {
+        throw new Error(
+          result?.error ||
+            "Lance could not answer.",
+        );
+      }
+
+      if (result?.contactState) {
+        setLanceContactState(
+          result.contactState,
+        );
+      }
+
+      if (result?.deferred) {
+        return;
+      }
+
+      renderLanceMessagesFromResult(
+        result,
+      );
+    } catch (requestError) {
+      console.error(
+        "Lance request failed:",
+        requestError,
+      );
+    } finally {
+      houseChatSendPending = false;
+      renderLanceContactState();
+    }
+  }
+
+  function connectHouseChat() {
+    const dialog =
+      getHouseChatDialog();
+
+    if (!dialog) {
+      return;
+    }
+
+    const closeButton =
+      document.getElementById(
+        "house-chat-close",
+      );
+
+    const form =
+      getHouseChatForm();
+
+    const input =
+      getHouseChatInput();
+
+    closeButton?.addEventListener(
+      "click",
+      () => {
+        dialog.close();
+      },
+    );
+
+    dialog.addEventListener(
+      "click",
+      (event) => {
+        if (event.target === dialog) {
+          dialog.close();
+        }
+      },
+    );
+
+    input?.addEventListener(
+      "beforeinput",
+      (event) => {
+        if (
+          event.inputType !==
+            "insertParagraph" ||
+          event.isComposing
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+
+        if (input.disabled) {
+          return;
+        }
+
+        form?.requestSubmit();
+      },
+    );
+
+    input?.addEventListener(
+      "keydown",
+      (event) => {
+        if (
+          event.key !== "Enter" ||
+          event.shiftKey ||
+          event.isComposing
+        ) {
+          return;
+        }
+
+        event.preventDefault();
+
+        if (input.disabled) {
+          return;
+        }
+
+        form?.requestSubmit();
+      },
+    );
+
+    form?.addEventListener(
+      "submit",
+      (event) => {
+        event.preventDefault();
+
+        if (
+          !input ||
+          input.disabled ||
+          lanceContactState === "left" ||
+          houseChatSendPending
+        ) {
+          return;
+        }
+
+        const message =
+          input.value.trim();
+
+        if (!message) {
+          return;
+        }
+
+        input.value = "";
+
+        void sendHouseChatMessage(
+          message,
+        );
+      },
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      () => {
+        if (
+          document.visibilityState !==
+          "visible"
+        ) {
+          return;
+        }
+
+        if (
+          lanceContactState === "left"
+        ) {
+          void checkLanceInitiative();
+        } else {
+          void syncLanceContactState();
+        }
+      },
+    );
+
+    renderLanceContactState();
+  }
+
+  async function openHouseChat() {
+    const dialog =
+      getHouseChatDialog();
+
+    if (!dialog) {
+      return;
+    }
+
+    if (elements.houseMailBadge) {
+      elements.houseMailBadge.hidden =
+        true;
+    }
+
+    dialog.showModal();
+
+    try {
+      await bootstrapHouseChat();
+
+      if (
+        lanceContactState === "left"
+      ) {
+        await checkLanceInitiative();
+      } else {
+        await syncLanceContactState();
+      }
+    } catch (error) {
+      console.error(
+        "Lance chat bootstrap failed:",
+        error,
+      );
+    }
+
+    const messages =
+      document.getElementById(
+        "house-chat-messages",
+      );
+
+    if (messages) {
+      messages.scrollTop =
+        messages.scrollHeight;
+    }
+
+    if (
+      lanceContactState === "present"
+    ) {
+      window.requestAnimationFrame(
+        () => {
+          getHouseChatInput()
+            ?.focus();
+        },
+      );
+    }
+  }
+
   function createDialog(
     title,
     description,
@@ -1895,6 +2623,14 @@ function getTodayKey() {
   }
   
   function connectEvents() {
+    elements.houseMailButton
+      ?.addEventListener(
+        "click",
+        openHouseChat,
+      );
+
+    connectHouseChat();
+
     elements.journalText
       .addEventListener(
         "input",

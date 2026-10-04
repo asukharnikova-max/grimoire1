@@ -1,127 +1,156 @@
-const navigationButton =
-  document.getElementById(
-    "navigation-button",
-  );
+function getNavigationPairs() {
+  return Array.from(
+    document.querySelectorAll(
+      ".home-navigation",
+    ),
+  )
+    .map((navigation) => {
+      const button =
+        navigation.querySelector(
+          ".navigation-button",
+        );
 
-const navigationMenu =
-  document.getElementById(
-    "navigation-menu",
-  );
+      const menu =
+        navigation.querySelector(
+          ".navigation-menu",
+        );
 
-function isMenuOpen() {
+      if (!button || !menu) {
+        return null;
+      }
+
+      return {
+        navigation,
+        button,
+        menu,
+      };
+    })
+    .filter(Boolean);
+}
+
+const navigationPairs =
+  getNavigationPairs();
+
+function isMenuOpen(pair) {
   return (
-    navigationButton?.getAttribute(
+    pair?.button?.getAttribute(
       "aria-expanded",
     ) === "true"
   );
 }
 
-function openNavigation() {
-  if (
-    !navigationButton ||
-    !navigationMenu
-  ) {
+function openNavigation(pair) {
+  if (!pair) {
     return;
   }
 
-  navigationMenu.hidden = false;
+  navigationPairs.forEach(
+    (otherPair) => {
+      if (otherPair !== pair) {
+        closeNavigation(otherPair);
+      }
+    },
+  );
 
-  navigationButton.setAttribute(
+  pair.menu.hidden = false;
+
+  pair.button.setAttribute(
     "aria-expanded",
     "true",
   );
 }
 
-function closeNavigation() {
-  if (
-    !navigationButton ||
-    !navigationMenu
-  ) {
+function closeNavigation(pair) {
+  if (!pair) {
     return;
   }
 
-  navigationMenu.hidden = true;
+  pair.menu.hidden = true;
 
-  navigationButton.setAttribute(
+  pair.button.setAttribute(
     "aria-expanded",
     "false",
   );
 }
 
-function toggleNavigation() {
-  if (isMenuOpen()) {
-    closeNavigation();
+function toggleNavigation(pair) {
+  if (isMenuOpen(pair)) {
+    closeNavigation(pair);
     return;
   }
 
-  openNavigation();
+  openNavigation(pair);
 }
 
 function handleDocumentClick(event) {
-  if (
-    !navigationButton ||
-    !navigationMenu
-  ) {
-    return;
-  }
-
   const target = event.target;
 
   if (!(target instanceof Node)) {
     return;
   }
 
-  const clickedButton =
-    navigationButton.contains(target);
-
-  const clickedMenu =
-    navigationMenu.contains(target);
-
-  if (
-    !clickedButton &&
-    !clickedMenu
-  ) {
-    closeNavigation();
-  }
+  navigationPairs.forEach((pair) => {
+    if (
+      !pair.navigation.contains(target)
+    ) {
+      closeNavigation(pair);
+    }
+  });
 }
 
 function handleKeydown(event) {
-  if (
-    event.key === "Escape" &&
-    isMenuOpen()
-  ) {
-    closeNavigation();
-
-    navigationButton?.focus();
+  if (event.key !== "Escape") {
+    return;
   }
+
+  const openPair =
+    navigationPairs.find(
+      isMenuOpen,
+    );
+
+  if (!openPair) {
+    return;
+  }
+
+  closeNavigation(openPair);
+  openPair.button.focus();
 }
 
 function connectNavigation() {
   if (
-    !navigationButton ||
-    !navigationMenu
+    navigationPairs.length === 0
   ) {
     return;
   }
 
-  navigationButton.addEventListener(
-    "click",
-    (event) => {
-      event.stopPropagation();
-      toggleNavigation();
-    },
-  );
+  navigationPairs.forEach((pair) => {
+    pair.button.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+        toggleNavigation(pair);
+      },
+    );
 
-  navigationMenu.addEventListener(
-    "click",
-    (event) => {
-      event.stopPropagation();
-      const target = event.target;
-      if (target instanceof Element && target.closest("[data-room-link]")) {
-        closeNavigation();
-      }
-    },
-  );
+    pair.menu.addEventListener(
+      "click",
+      (event) => {
+        event.stopPropagation();
+
+        const target =
+          event.target;
+
+        if (
+          target instanceof Element &&
+          target.closest(
+            "[data-room-link]",
+          )
+        ) {
+          closeNavigation(pair);
+        }
+      },
+    );
+  });
 
   document.addEventListener(
     "click",
@@ -135,4 +164,3 @@ function connectNavigation() {
 }
 
 connectNavigation();
-

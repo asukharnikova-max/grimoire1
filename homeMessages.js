@@ -124,6 +124,48 @@ export const homeMessages = {
         "The sky is beautifully clear tonight.",
         "The evening has filled itself with stars.",
       ],
+
+      freezing: [
+        "The air outside has turned properly freezing.",
+        "It is bitterly cold beyond the windows today.",
+        "The world outside is firmly in freezing territory.",
+      ],
+
+      cold: [
+        "Cold air has settled outside today.",
+        "There is a definite chill beyond the windows.",
+        "The day outside has a crisp, cold edge.",
+      ],
+
+      cool: [
+        "The air outside feels pleasantly cool.",
+        "A cool day has settled beyond the windows.",
+        "There is a fresh coolness in the air today.",
+      ],
+
+      mild: [
+        "The air outside feels wonderfully mild.",
+        "It is a gentle, mild sort of day outside.",
+        "The temperature has found a comfortable middle ground.",
+      ],
+
+      warm: [
+        "Warm air has settled around the house today.",
+        "There is a lovely warmth beyond the windows.",
+        "The day outside feels comfortably warm.",
+      ],
+
+      hot: [
+        "The heat has properly arrived outside.",
+        "It is decidedly hot beyond the windows today.",
+        "The world outside is running rather warm today.",
+      ],
+
+      "very-hot": [
+        "The world outside appears to be melting.",
+        "It is very hot beyond the windows today.",
+        "The heat outside has become a whole event.",
+      ],
     },
 
     openings: {
@@ -173,6 +215,48 @@ export const homeMessages = {
         "A clear night",
         "The stars",
         "The evening sky",
+      ],
+
+      freezing: [
+        "Freezing air",
+        "Bitter cold",
+        "A properly freezing day",
+      ],
+
+      cold: [
+        "Cold air",
+        "A crisp chill",
+        "The cold",
+      ],
+
+      cool: [
+        "Cool air",
+        "A fresh chill",
+        "The cool weather",
+      ],
+
+      mild: [
+        "Mild air",
+        "A gentle temperature",
+        "The mild weather",
+      ],
+
+      warm: [
+        "Warm air",
+        "A gentle warmth",
+        "The warm weather",
+      ],
+
+      hot: [
+        "Hot air",
+        "The heat",
+        "A hot day",
+      ],
+
+      "very-hot": [
+        "Serious heat",
+        "Very hot air",
+        "The rather dramatic heat",
       ],
     },
 

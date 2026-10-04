@@ -49,8 +49,7 @@ function isTimedItem(itemOrType) {
       : itemOrType?.type;
 
   return (
-    type === "audiobook" ||
-    type === "podcast"
+    type === "audiobook"
   );
 }
 
@@ -203,11 +202,11 @@ function createCover(item) {
     image.alt = `${item.title} cover`;
     image.loading = "lazy";
     image.addEventListener("error", () => {
-      cover.replaceChildren(document.createTextNode(item.type === "audiobook" || item.type === "podcast" ? "🎧" : "📖"));
+      cover.replaceChildren(document.createTextNode(item.type === "audiobook" ? "🎧" : "📖"));
     }, { once: true });
     cover.append(image);
   } else {
-    cover.textContent = item.type === "audiobook" || item.type === "podcast" ? "🎧" : "📖";
+    cover.textContent = item.type === "audiobook" ? "🎧" : "📖";
   }
 
   return cover;
@@ -261,8 +260,7 @@ function ensureLibraryLayout() {
 
   sideColumn.append(
     label,
-    createLibraryPathButton("🗂️", "Collections", "Browse every story and reading list.", () => openSidePanel("collections")),
-    createLibraryPathButton("📜", "Dictionary", "Return to the words gathered while reading.", () => openSidePanel("dictionary")),
+    createLibraryPathButton("🗂️", "Collections", "Browse every story in the Library.", () => openSidePanel("collections")),
     createLibraryPathButton("✦", "Add a story", "Make room for something new.", openDialog),
   );
 
@@ -320,8 +318,21 @@ function openSidePanel(panelName) {
   if (!panel || !backdrop || !title || !body) return;
 
   state.activePanel = panelName;
-  title.textContent = panelName === "collections" ? "Collections" : "Dictionary";
-  body.replaceChildren(panelName === "collections" ? createCollectionsPanel() : createDictionaryPanel());
+
+  const panels = {
+    collections: {
+      title: "Collections",
+      content: createCollectionsPanel,
+    },
+    dictionary: {
+      title: "Dictionary",
+      content: createDictionaryPanel,
+    },
+  };
+
+  const selectedPanel = panels[panelName] || panels.collections;
+  title.textContent = selectedPanel.title;
+  body.replaceChildren(selectedPanel.content());
   panel.classList.add("is-open");
   backdrop.classList.add("is-open");
   panel.setAttribute("aria-hidden", "false");
@@ -338,85 +349,93 @@ function closeSidePanel() {
 
 function createCollectionsPanel() {
   const wrapper = document.createElement("div");
-  wrapper.className = "library-panel-stack library-collections-panel";
+  wrapper.className = "library-panel-stack library-collections-panel library-collections-landing";
 
-  const overview = document.createElement("section");
-  overview.className = "library-collection-overview";
+  const intro = document.createElement("section");
+  intro.className = "library-collection-overview library-collections-intro";
+  intro.innerHTML = `
+    <div>
+      <p class="section-label">Your shelves</p>
+      <h3>Where the stories are.</h3>
+      <p>Choose a shelf. The books can stay tucked away until you want them.</p>
+    </div>
+  `;
 
-  const overviewText = document.createElement("div");
-  const eyebrow = document.createElement("p");
-  eyebrow.className = "section-label";
-  eyebrow.textContent = "Your gathered stories";
-  const title = document.createElement("h3");
-  title.textContent = `${state.items.length} ${state.items.length === 1 ? "story" : "stories"}`;
-  const description = document.createElement("p");
-  description.textContent = "Books, audio, manga and podcasts kept together, without crowding the room.";
-  overviewText.append(eyebrow, title, description);
+  const shelves = document.createElement("div");
+  shelves.className = "library-collection-shelves";
 
-  const add = document.createElement("button");
-  add.type = "button";
-  add.className = "library-collection-add";
-  add.textContent = "+ Add a story";
-  add.addEventListener("click", () => {
-    closeSidePanel();
-    openDialog();
+  const definitions = [
+    ["want_to_read", "🌙", "TBR", "Stories waiting for their turn."],
+    ["reading", "📖", "Reading", "Stories currently open."],
+    ["listening", "🎧", "Listening", "Stories in your ears."],
+    ["finished", "✨", "Finished", "Stories that stayed with you."],
+    ["dnf", "🍂", "DNF", "Stories you chose to leave behind."],
+  ];
+
+  definitions.forEach(([value, icon, label, description]) => {
+    const count = state.items.filter((item) => item.status === value).length;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "library-collection-shelf-card";
+    button.innerHTML = `
+      <span class="library-collection-shelf-icon" aria-hidden="true">${icon}</span>
+      <span class="library-collection-shelf-copy">
+        <strong>${label}</strong>
+        <span>${description}</span>
+      </span>
+      <span class="library-collection-shelf-count">${count}</span>
+      <span class="library-collection-shelf-arrow" aria-hidden="true">›</span>
+    `;
+    button.addEventListener("click", () => openCollectionShelf(value, label));
+    shelves.append(button);
   });
 
-  overview.append(overviewText, add);
+  wrapper.append(intro, shelves);
+  return wrapper;
+}
 
-  const toolbar = document.createElement("div");
-  toolbar.className = "library-collection-toolbar";
+function openCollectionShelf(filter, label) {
+  const body = document.getElementById("library-side-panel-body");
+  const title = document.getElementById("library-side-panel-title");
+  if (!body || !title) return;
+
+  state.filter = filter;
+  state.collectionSearch = "";
+  title.textContent = label;
+  body.replaceChildren(createCollectionShelfPanel(label));
+}
+
+function createCollectionShelfPanel(label) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "library-panel-stack library-collection-shelf-panel";
+
+  const back = document.createElement("button");
+  back.type = "button";
+  back.className = "library-collection-back";
+  back.textContent = "‹ All collections";
+  back.addEventListener("click", () => {
+    const body = document.getElementById("library-side-panel-body");
+    const title = document.getElementById("library-side-panel-title");
+    if (!body || !title) return;
+    title.textContent = "Collections";
+    body.replaceChildren(createCollectionsPanel());
+  });
 
   const searchWrap = document.createElement("label");
   searchWrap.className = "library-collection-search";
-  const searchIcon = document.createElement("span");
-  searchIcon.setAttribute("aria-hidden", "true");
-  searchIcon.textContent = "⌕";
+  searchWrap.innerHTML = '<span aria-hidden="true">⌕</span>';
   const search = document.createElement("input");
   search.type = "search";
-  search.placeholder = "Search title or author";
-  search.value = state.collectionSearch;
-  search.setAttribute("aria-label", "Search Library collections");
-  searchWrap.append(searchIcon, search);
+  search.placeholder = `Search ${label.toLowerCase()}`;
+  search.setAttribute("aria-label", `Search ${label} collection`);
+  searchWrap.append(search);
 
-  const sort = document.createElement("select");
-  sort.className = "library-collection-sort";
-  sort.setAttribute("aria-label", "Sort Library collections");
-  [["recent", "Recently added"], ["series", "Series"], ["series_order", "Series order"], ["title", "Title A–Z"], ["author", "Author A–Z"], ["progress", "Most progress"]]
-    .forEach(([value, label]) => {
-      const option = document.createElement("option");
-      option.value = value;
-      option.textContent = label;
-      option.selected = state.collectionSort === value;
-      sort.append(option);
-    });
-
-  toolbar.append(searchWrap, sort);
-
-  const controls = document.createElement("div");
-  controls.className = "library-panel-filters";
-  [["all", "All"], ["book", "Books"], ["audiobook", "Audio"], ["manga", "Manga"], ["podcast", "Podcasts"], ["reading", "Reading"], ["listening", "Listening"], ["finished", "Finished"], ["dnf", "DNF"]]
-    .forEach(([value, label]) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.className = "library-panel-filter";
-      button.textContent = label;
-      button.classList.toggle("is-active", state.filter === value);
-      button.addEventListener("click", () => {
-        state.filter = value;
-        controls.querySelectorAll(".library-panel-filter")
-          .forEach((candidate) => candidate.classList.toggle("is-active", candidate === button));
-        renderCollectionItems(items, count);
-      });
-      controls.append(button);
-    });
-
-  const shelvesHeader = document.createElement("div");
-  shelvesHeader.className = "library-panel-section-heading";
-  const shelvesTitle = document.createElement("h3");
-  shelvesTitle.textContent = "The shelves";
+  const heading = document.createElement("div");
+  heading.className = "library-panel-section-heading";
+  const headingTitle = document.createElement("h3");
+  headingTitle.textContent = label;
   const count = document.createElement("span");
-  shelvesHeader.append(shelvesTitle, count);
+  heading.append(headingTitle, count);
 
   const items = document.createElement("div");
   items.className = "library-panel-books";
@@ -426,26 +445,8 @@ function createCollectionsPanel() {
     renderCollectionItems(items, count);
   });
 
-  sort.addEventListener("change", () => {
-    state.collectionSort = sort.value;
-    renderCollectionItems(items, count);
-  });
-
   renderCollectionItems(items, count);
-
-  const listsHeader = document.createElement("div");
-  listsHeader.className = "library-panel-section-heading";
-  const listsTitle = document.createElement("h3");
-  listsTitle.textContent = "Reading lists";
-  const listsCount = document.createElement("span");
-  listsCount.textContent = String(state.lists.length);
-  listsHeader.append(listsTitle, listsCount);
-
-  const lists = document.createElement("div");
-  lists.className = "library-panel-lists";
-  renderCollectionLists(lists);
-
-  wrapper.append(overview, toolbar, controls, shelvesHeader, items, listsHeader, lists);
+  wrapper.append(back, searchWrap, heading, items);
   return wrapper;
 }
 
@@ -916,14 +917,11 @@ function injectLibraryLayoutStyles() {
     .library-panel-section-heading{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}.library-panel-section-heading h3{margin:.35rem 0 -.2rem}.library-panel-section-heading span{font-size:.78rem;opacity:.58}
     .library-collection-card{display:grid;grid-template-columns:72px minmax(0,1fr);gap:.8rem;align-items:stretch;padding:.75rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.3);min-width:0}.library-collection-card .library-cover{width:72px;min-width:72px;height:96px;border-radius:.72rem}.library-collection-card-content{display:grid;align-content:start;gap:.25rem;min-width:0}.library-collection-card-top{display:flex;justify-content:space-between;gap:.5rem;align-items:center}.library-collection-type,.library-collection-status{font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;opacity:.62}.library-collection-card h4{margin:.12rem 0 0;font-size:1rem;line-height:1.2}.library-collection-progress{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.5rem;align-items:center;margin-top:.35rem}.library-collection-progress>span{height:.3rem;border-radius:999px;background:rgba(86,71,62,.12);overflow:hidden}.library-collection-progress>span>span{display:block;height:100%;border-radius:inherit;background:rgba(95,103,68,.55)}.library-collection-progress small{font-size:.68rem;opacity:.65}
     .library-list-card{display:grid;grid-template-columns:auto minmax(0,1fr);gap:.75rem;align-items:start;padding:.85rem;border:1px solid rgba(103,76,49,.15);border-radius:1rem;background:rgba(255,255,255,.24)}.library-list-icon{display:grid;place-items:center;width:2rem;height:2rem;border-radius:.7rem;background:rgba(88,94,63,.12)}.library-list-card p{margin:.2rem 0 0;opacity:.7;line-height:1.4}.library-collection-empty{grid-column:1/-1}
+    .library-reading-lists-overview{align-items:center}.library-reading-list-create:disabled{opacity:.58;cursor:not-allowed}.library-reading-lists-grid{display:grid;gap:.8rem}.library-reading-lists-empty{min-height:5.5rem;align-items:center}
     .library-dictionary-overview{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1rem;align-items:center;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.24)}.library-dictionary-add{justify-self:end}.library-dictionary-add-dialog{width:min(92vw,560px);max-width:560px;padding:0;border:1px solid rgba(121,94,65,.28);border-radius:1.35rem;background:rgba(239,229,210,.94);color:inherit;box-shadow:0 30px 90px rgba(27,20,14,.34);backdrop-filter:blur(26px);-webkit-backdrop-filter:blur(26px);overflow:hidden}.library-dictionary-add-dialog::backdrop{background:rgba(18,14,11,.42);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}.library-dictionary-add-form{display:grid;gap:0;padding:0}.library-dictionary-add-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;padding:1.25rem 1.35rem 1.05rem;border-bottom:1px solid rgba(103,76,49,.14);background:linear-gradient(135deg,rgba(255,255,255,.28),rgba(91,99,68,.07))}.library-dictionary-add-heading{display:flex;gap:.85rem;align-items:flex-start}.library-dictionary-add-icon{display:grid;place-items:center;width:2.65rem;height:2.65rem;flex:0 0 auto;border:1px solid rgba(95,103,68,.22);border-radius:.9rem;background:rgba(95,103,68,.12);font-size:1.15rem}.library-dictionary-add-header h2{margin:.15rem 0 0}.library-dictionary-add-subtitle{margin:.25rem 0 0;font-size:.8rem;line-height:1.4;opacity:.66}.library-dictionary-add-fields{display:grid;gap:.95rem;padding:1.2rem 1.35rem}.library-form-field{display:grid;gap:.4rem}.library-form-field>span{font-size:.75rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.72}.library-dictionary-add-form input,.library-dictionary-add-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(103,76,49,.2);border-radius:.9rem;padding:.8rem .9rem;background:rgba(255,255,255,.38);color:inherit;font:inherit;outline:none;transition:border-color 160ms ease,background 160ms ease,box-shadow 160ms ease}.library-dictionary-add-form textarea{resize:vertical;min-height:88px}.library-dictionary-add-form input:focus,.library-dictionary-add-form textarea:focus{border-color:rgba(95,103,68,.5);background:rgba(255,255,255,.5);box-shadow:0 0 0 3px rgba(95,103,68,.1)}.library-dictionary-add-form .library-item-form-status{min-height:1.2rem;margin:0;padding:0 1.35rem;font-size:.78rem;opacity:.72}.library-dictionary-add-actions{display:flex;justify-content:flex-end;gap:.65rem;padding:1rem 1.35rem 1.2rem;border-top:1px solid rgba(103,76,49,.12);background:rgba(255,255,255,.12)}.library-dictionary-add-actions button{border-radius:999px;padding:.68rem 1.05rem;font:inherit;font-weight:700;cursor:pointer}.library-primary-button{border:1px solid rgba(78,83,55,.35);background:rgba(78,83,55,.18);color:inherit}.library-primary-button:hover,.library-primary-button:focus-visible{background:rgba(78,83,55,.26)}.library-secondary-button{border:1px solid rgba(103,76,49,.22);background:rgba(255,255,255,.28);color:inherit}.library-dictionary-overview h3{margin:.12rem 0 .2rem;font-size:1.25rem}.library-dictionary-overview p{margin:0;line-height:1.45;opacity:.72}
     .library-dictionary-toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:.65rem}.library-dictionary-list{grid-template-columns:1fr}.library-dictionary-card{display:grid;gap:.55rem;padding:.9rem 1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.3)}.library-dictionary-card-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem}.library-dictionary-card h4{margin:0;font-size:1.08rem}.library-dictionary-card-top span{flex:0 0 auto;font-size:.68rem;opacity:.56}.library-dictionary-card-meaning{margin:0;line-height:1.45}.library-dictionary-source{display:grid;gap:.1rem;padding-top:.45rem;border-top:1px solid rgba(103,76,49,.12)}.library-dictionary-source strong{font-size:.78rem}.library-dictionary-source span{font-size:.72rem;opacity:.66}.library-dictionary-context-preview{margin:0;padding:.55rem .7rem;border-left:2px solid rgba(95,103,68,.35);background:rgba(95,103,68,.06);font-size:.78rem;line-height:1.45;opacity:.82}.library-dictionary-empty{grid-column:1/-1}
-    #library-story-dialog{width:min(92vw,900px);max-width:900px}#library-story-dialog-body{width:100%;max-width:none;box-sizing:border-box}.library-story-workspace{display:grid;gap:1rem;width:100%;max-width:none;box-sizing:border-box}.library-story-heading{min-width:0}.library-story-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;width:100%}.library-story-action-card{display:grid;align-content:start;gap:.8rem;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.26)}.library-story-action-card>header h3{margin:0;font-size:1rem}.library-story-action-card>header p{margin:.2rem 0 0;font-size:.76rem;line-height:1.4;opacity:.68}.library-inline-form,.library-log-form{display:grid;gap:.7rem}.library-inline-form label,.library-log-form label{display:grid;gap:.32rem}.library-inline-form label>span,.library-log-form label>span{font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.67}.library-inline-form input,.library-inline-form select,.library-log-form input,.library-log-form textarea{width:100%;box-sizing:border-box;border:1px solid rgba(103,76,49,.19);border-radius:.78rem;padding:.62rem .72rem;background:rgba(255,255,255,.38);color:inherit;font:inherit;outline:none}.library-progress-form{grid-template-columns:repeat(2,minmax(0,1fr))}.library-progress-form button,.library-progress-form .library-action-status{grid-column:1/-1}.library-status-form{grid-template-columns:minmax(0,1fr) auto;align-items:end}.library-status-form .library-action-status{grid-column:1/-1}.library-session-actions{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}.library-session-actions button,.library-story-action-card button{border-radius:999px;padding:.62rem .88rem;font:inherit;font-weight:700;cursor:pointer}.library-session-badge{display:inline-flex;align-items:center;border:1px solid rgba(95,103,68,.25);border-radius:999px;padding:.5rem .7rem;background:rgba(95,103,68,.1);font-size:.75rem;font-weight:700}.library-story-log-card{grid-column:1/-1}.library-log-form{grid-column:1/-1}.library-log-fields-row{display:grid;grid-template-columns:1fr .8fr .8fr;gap:.6rem}.library-action-status{min-height:1rem;margin:0;font-size:.72rem;opacity:.72}.library-action-hint{margin:0;padding:.55rem .7rem;border-left:2px solid rgba(95,103,68,.34);background:rgba(95,103,68,.06);font-size:.74rem;line-height:1.4;opacity:.82}.library-story-action-card button:disabled{opacity:.55;cursor:wait}@media(max-width:700px){.library-story-actions{grid-template-columns:1fr}.library-log-fields-row{grid-template-columns:1fr 1fr}.library-log-fields-row label:first-child{grid-column:1/-1}}\n    .library-add-story-tags{display:grid;gap:.75rem;grid-column:1/-1;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.22)}.library-add-story-tags-heading span,.library-add-story-new-tag>span{display:block;font-size:.78rem;font-weight:750;color:#5f4e58}.library-add-story-tags-heading p{margin:.25rem 0 0;font-size:.76rem;line-height:1.4;opacity:.66}.library-add-story-tag-options{display:flex;flex-wrap:wrap;gap:.5rem}.library-add-story-tag-option{display:inline-flex;align-items:center;gap:.42rem;padding:.45rem .65rem;border:1px solid var(--library-tag-border,rgba(95,103,68,.22));border-radius:999px;background:var(--library-tag-soft,rgba(255,255,255,.34));box-shadow:inset 3px 0 0 var(--library-tag-color,#71815f);cursor:pointer}.library-add-story-tag-option input{width:auto;min-height:0;margin:0}.library-add-story-tag-option span{font-size:.76rem;font-weight:700}.library-add-story-tags-empty{margin:0;font-size:.76rem;opacity:.64}.library-add-story-new-tag{display:grid;gap:.4rem}.library-add-story-new-tag input{width:100%;min-height:46px;box-sizing:border-box;padding:12px 13px;color:#342931;background:rgba(255,255,255,.62);border:1px solid rgba(122,96,108,.14);border-radius:14px;font:inherit}.library-add-story-new-tag small{font-size:.7rem;opacity:.62}
+    #library-story-dialog{width:min(92vw,900px);max-width:900px}#library-story-dialog-body{width:100%;max-width:none;box-sizing:border-box}.library-story-workspace{display:grid;gap:1rem;width:100%;max-width:none;box-sizing:border-box}.library-story-heading{min-width:0}.library-story-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;width:100%}.library-story-action-card{display:grid;align-content:start;gap:.8rem;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.26)}.library-story-action-card>header h3{margin:0;font-size:1rem}.library-story-action-card>header p{margin:.2rem 0 0;font-size:.76rem;line-height:1.4;opacity:.68}.library-inline-form{display:grid;gap:.7rem}.library-inline-form label{display:grid;gap:.32rem}.library-inline-form label>span{font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.67}.library-inline-form input,.library-inline-form select{width:100%;box-sizing:border-box;border:1px solid rgba(103,76,49,.19);border-radius:.78rem;padding:.62rem .72rem;background:rgba(255,255,255,.38);color:inherit;font:inherit;outline:none}.library-progress-form{grid-template-columns:repeat(2,minmax(0,1fr))}.library-progress-form button,.library-progress-form .library-action-status{grid-column:1/-1}.library-status-form{grid-template-columns:minmax(0,1fr) auto;align-items:end}.library-status-form .library-action-status{grid-column:1/-1}.library-session-actions{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}.library-session-actions button,.library-story-action-card button{border-radius:999px;padding:.62rem .88rem;font:inherit;font-weight:700;cursor:pointer}.library-session-badge{display:inline-flex;align-items:center;border:1px solid rgba(95,103,68,.25);border-radius:999px;padding:.5rem .7rem;background:rgba(95,103,68,.1);font-size:.75rem;font-weight:700}.library-action-status{min-height:1rem;margin:0;font-size:.72rem;opacity:.72}.library-action-hint{margin:0;padding:.55rem .7rem;border-left:2px solid rgba(95,103,68,.34);background:rgba(95,103,68,.06);font-size:.74rem;line-height:1.4;opacity:.82}.library-story-action-card button:disabled{opacity:.55;cursor:wait}@media(max-width:700px){.library-story-actions{grid-template-columns:1fr}}\n    .library-add-story-tags{display:grid;gap:.75rem;grid-column:1/-1;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.22)}.library-add-story-tags-heading span,.library-add-story-new-tag>span{display:block;font-size:.78rem;font-weight:750;color:#5f4e58}.library-add-story-tags-heading p{margin:.25rem 0 0;font-size:.76rem;line-height:1.4;opacity:.66}.library-add-story-tag-options{display:flex;flex-wrap:wrap;gap:.5rem}.library-add-story-tag-option{display:inline-flex;align-items:center;gap:.42rem;padding:.45rem .65rem;border:1px solid var(--library-tag-border,rgba(95,103,68,.22));border-radius:999px;background:var(--library-tag-soft,rgba(255,255,255,.34));box-shadow:inset 3px 0 0 var(--library-tag-color,#71815f);cursor:pointer}.library-add-story-tag-option input{width:auto;min-height:0;margin:0}.library-add-story-tag-option span{font-size:.76rem;font-weight:700}.library-add-story-tags-empty{margin:0;font-size:.76rem;opacity:.64}.library-add-story-new-tag{display:grid;gap:.4rem}.library-add-story-new-tag input{width:100%;min-height:46px;box-sizing:border-box;padding:12px 13px;color:#342931;background:rgba(255,255,255,.62);border:1px solid rgba(122,96,108,.14);border-radius:14px;font:inherit}.library-add-story-new-tag small{font-size:.7rem;opacity:.62}
     .library-word-danger-zone{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.8rem;align-items:center;margin-top:1.1rem;padding:1rem;border:1px solid rgba(125,63,70,.22);border-radius:1rem;background:rgba(125,63,70,.06)}.library-word-danger-zone h3{margin:0;font-size:1rem}.library-word-danger-zone p{margin:.25rem 0 0;font-size:.76rem;line-height:1.4;opacity:.7}.library-word-danger-zone>.library-action-status{grid-column:1/-1;margin:0}@media(max-width:700px){.library-word-danger-zone{grid-template-columns:1fr}.library-word-danger-zone .library-danger-button{width:100%}}.library-story-tags-card{grid-column:1/-1}.library-story-tag-chip{gap:.35rem}.library-story-tag-remove{display:grid;place-items:center;width:1.25rem;height:1.25rem;padding:0!important;border:0!important;border-radius:999px!important;background:rgba(103,76,49,.12)!important;color:inherit;font-size:.9rem!important;line-height:1;cursor:pointer}.library-story-danger-zone{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.8rem;align-items:center;margin-top:.25rem;padding:1rem;border:1px solid rgba(125,63,70,.22);border-radius:1rem;background:rgba(125,63,70,.06)}.library-story-danger-zone h3{margin:0;font-size:1rem}.library-story-danger-zone p{margin:.25rem 0 0;font-size:.76rem;line-height:1.4;opacity:.7}.library-danger-button{border:1px solid rgba(125,63,70,.35);border-radius:999px;padding:.65rem .95rem;background:rgba(125,63,70,.12);color:inherit;font:inherit;font-weight:750;cursor:pointer}.library-danger-button:disabled{opacity:.45;cursor:not-allowed}.library-story-danger-zone>.library-action-status{grid-column:1/-1;margin:0}@media(max-width:700px){.library-story-danger-zone{grid-template-columns:1fr}.library-danger-button{width:100%}}.library-story-tag-chips{display:flex;flex-wrap:wrap;gap:.5rem;min-height:2rem;align-items:center}.library-story-tag-chip{display:inline-flex;align-items:center;min-height:2rem;padding:.4rem .68rem;border:1px solid var(--library-tag-border,rgba(95,103,68,.23));border-radius:999px;background:var(--library-tag-soft,rgba(95,103,68,.11));box-shadow:inset 3px 0 0 var(--library-tag-color,#71815f);font-size:.76rem;font-weight:750}.library-story-tags-empty{margin:0;font-size:.78rem;opacity:.65}.library-story-tag-forms{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem}.library-tag-attach-form,.library-tag-create-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.55rem;align-items:end}.library-tag-attach-form label,.library-tag-create-form label{display:grid;gap:.32rem}.library-tag-attach-form label>span,.library-tag-create-form label>span{font-size:.68rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.67}.library-tag-attach-form select,.library-tag-create-form input{width:100%;box-sizing:border-box;border:1px solid rgba(103,76,49,.19);border-radius:.78rem;padding:.62rem .72rem;background:rgba(255,255,255,.38);color:inherit;font:inherit;outline:none}.library-tag-attach-form .library-action-status,.library-tag-create-form .library-action-status{grid-column:1/-1}@media(max-width:700px){.library-story-tag-forms{grid-template-columns:1fr}.library-tag-attach-form,.library-tag-create-form{grid-template-columns:1fr}.library-tag-attach-form button,.library-tag-create-form button{width:100%}}
-    .library-log-card-actions{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;margin-top:.55rem}
-    .library-log-delete-button{border:1px solid rgba(125,63,70,.28);border-radius:999px;padding:.42rem .72rem;background:rgba(125,63,70,.08);color:inherit;font:inherit;font-size:.72rem;font-weight:750;cursor:pointer}
-    .library-log-delete-button:disabled{opacity:.5;cursor:not-allowed}
-    .library-log-card-actions .library-action-status{margin:0}
     .library-time-field{display:grid;gap:.42rem}
     .library-time-field>span,.library-time-total-field>span,.library-time-current-field>span{font-size:.74rem;font-weight:750}
     .library-time-inputs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.55rem}
@@ -932,6 +930,8 @@ function injectLibraryLayoutStyles() {
     .library-time-inputs input{width:100%;box-sizing:border-box}
     .library-time-total-field[hidden],.library-time-current-field[hidden],.library-page-total-field[hidden],.library-page-current-field[hidden]{display:none!important}
     @media(max-width:700px){.library-time-inputs{grid-template-columns:repeat(3,minmax(0,1fr));gap:.38rem}}
+    .library-story-completed-dialog{width:min(92vw,560px);max-width:560px;padding:0;border:1px solid rgba(103,76,49,.24);border-radius:1.4rem;background:rgba(242,234,219,.96);color:inherit;box-shadow:0 30px 90px rgba(25,20,16,.32);overflow:hidden}.library-story-completed-dialog::backdrop{background:rgba(20,16,12,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}.library-story-completed-shell{display:grid;gap:0}.library-story-completed-header{display:flex;gap:.9rem;align-items:flex-start;padding:1.25rem 1.35rem 1rem;border-bottom:1px solid rgba(103,76,49,.13);background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(95,103,68,.08))}.library-story-completed-symbol{display:grid;place-items:center;width:2.7rem;height:2.7rem;flex:0 0 auto;border-radius:.9rem;background:rgba(95,103,68,.13);font-size:1.2rem}.library-story-completed-header h2{margin:.15rem 0 .25rem}.library-story-completed-header p:last-child{margin:0;font-size:.8rem;line-height:1.45;opacity:.68}.library-story-completed-body{display:grid;gap:1rem;padding:1.2rem 1.35rem}.library-story-completed-story{display:grid;gap:.15rem;padding:.85rem 1rem;border:1px solid rgba(103,76,49,.14);border-radius:1rem;background:rgba(255,255,255,.28)}.library-story-completed-story strong{font-size:1.02rem}.library-story-completed-story span{font-size:.78rem;opacity:.65}.library-completion-scale{display:grid;gap:.55rem;margin:0;padding:.9rem 1rem;border:1px solid rgba(103,76,49,.14);border-radius:1rem;background:rgba(255,255,255,.24)}.library-completion-scale legend{padding:0;font-size:.75rem;font-weight:800;letter-spacing:.04em;text-transform:uppercase;opacity:.72}.library-completion-choices{display:flex;gap:.45rem}.library-completion-choice{display:grid;place-items:center;width:2.5rem;height:2.5rem;border:1px solid rgba(103,76,49,.18);border-radius:.8rem;background:rgba(255,255,255,.3);font-size:1.2rem;filter:grayscale(1);opacity:.45;cursor:pointer}.library-completion-choice.is-selected{filter:none;opacity:1;background:rgba(95,103,68,.12);border-color:rgba(95,103,68,.3)}.library-story-completed-note{margin:0;padding:0 1.35rem 1rem;font-size:.76rem;line-height:1.45;opacity:.66}.library-story-completed-actions{display:flex;justify-content:flex-end;gap:.65rem;padding:1rem 1.35rem 1.2rem;border-top:1px solid rgba(103,76,49,.12)}.library-story-completed-actions button{border-radius:999px;padding:.68rem 1rem;font:inherit;font-weight:700;cursor:pointer}@media(max-width:560px){.library-story-completed-actions{display:grid;grid-template-columns:1fr}.library-story-completed-actions button{width:100%}}
+    .library-collections-landing{gap:1.15rem}.library-collections-intro{display:block}.library-collection-shelves{display:grid;gap:.75rem}.library-collection-shelf-card{width:100%;display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:.8rem;align-items:center;padding:1rem;border:1px solid rgba(103,76,49,.16);border-radius:1rem;background:rgba(255,255,255,.3);color:inherit;text-align:left;cursor:pointer}.library-collection-shelf-card:hover,.library-collection-shelf-card:focus-visible{background:rgba(255,255,255,.46);border-color:rgba(95,103,68,.34);transform:translateY(-1px)}.library-collection-shelf-icon{display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:.85rem;background:rgba(95,103,68,.1);font-size:1.2rem}.library-collection-shelf-copy{display:grid;gap:.15rem;min-width:0}.library-collection-shelf-copy strong{font-size:1rem}.library-collection-shelf-copy span{font-size:.76rem;line-height:1.35;opacity:.66}.library-collection-shelf-count{display:grid;place-items:center;min-width:2rem;height:2rem;padding:0 .45rem;border-radius:999px;background:rgba(103,76,49,.08);font-size:.76rem;font-weight:750;opacity:.72}.library-collection-shelf-arrow{font-size:1.35rem;opacity:.45}.library-collection-back{justify-self:start;border:0;padding:.2rem 0;background:transparent;color:inherit;font:inherit;font-size:.8rem;font-weight:750;opacity:.7;cursor:pointer}.library-collection-back:hover,.library-collection-back:focus-visible{opacity:1}.library-collection-shelf-panel .library-collection-search{width:100%;box-sizing:border-box}
     body.library-panel-open{overflow:hidden}
     @media(max-width:760px){.library-dashboard.library-dashboard-refined{grid-template-columns:minmax(0,1fr)}.library-paths-column{position:static;grid-template-columns:repeat(3,minmax(0,1fr))}.library-paths-label{grid-column:1/-1}.library-path-card{grid-template-columns:1fr;align-items:start}.library-path-arrow{display:none}.library-side-panel{width:min(96vw,620px)}}
     @media(max-width:560px){.library-paths-column{grid-template-columns:1fr}.library-path-card{grid-template-columns:auto minmax(0,1fr) auto}.library-path-arrow{display:inline}.library-panel-books{grid-template-columns:1fr}.library-collection-toolbar,.library-dictionary-toolbar{grid-template-columns:1fr}.library-collection-overview{display:grid}.library-collection-add{justify-self:start}.library-dictionary-overview{grid-template-columns:1fr}.library-dictionary-add{justify-self:start}}
@@ -958,18 +958,7 @@ function renderCurrentCard(item, label) {
   const series = document.createElement("p");
   series.className = "library-card-series";
   series.textContent = seriesLabel(item);
-  const track = document.createElement("div");
-  track.className = "library-progress-track";
-  const fill = document.createElement("div");
-  fill.className = "library-progress-fill";
-  fill.style.setProperty("--progress", `${getProgress(item)}%`);
-  track.append(fill);
-  const progress = document.createElement("p");
-  progress.className = "library-progress-label";
-  progress.textContent = isTimedItem(item)
-    ? `${formatDurationBrief(item.currentUnit)} of ${item.totalUnits ? formatDurationBrief(item.totalUnits) : "?"}`
-    : `${item.currentUnit} of ${item.totalUnits || "?"} pages`;
-  content.append(kicker, title, author, series, track, progress);
+  content.append(kicker, title, author, series);
   card.append(content);
   return makeClickable(card, () => openStoryCard(item), `Open ${item.title}`);
 }
@@ -985,11 +974,9 @@ function renderCurrent() {
 
   activeItems.forEach((item) => {
     const label =
-      item.type === "podcast"
-        ? "Current podcast"
-        : item.status === "listening"
-          ? "Currently listening"
-          : "Currently reading";
+      item.status === "listening"
+        ? "Currently listening"
+        : "Currently reading";
 
     elements.current.append(
       renderCurrentCard(item, label),
@@ -1006,7 +993,7 @@ function renderCurrent() {
 
 function matchesFilter(item) {
   if (state.filter === "all") return true;
-  if (["book", "audiobook", "manga", "podcast"].includes(state.filter)) return item.type === state.filter;
+  if (["book", "audiobook"].includes(state.filter)) return item.type === state.filter;
   return item.status === state.filter;
 }
 
@@ -1097,6 +1084,119 @@ function detailRow(label, value) {
   return row;
 }
 
+function createCompletionScale(label, symbol, value = 0) {
+  const group = document.createElement("fieldset");
+  group.className = "library-completion-scale";
+
+  const legend = document.createElement("legend");
+  legend.textContent = label;
+
+  const choices = document.createElement("div");
+  choices.className = "library-completion-choices";
+  choices.setAttribute("role", "radiogroup");
+  choices.setAttribute("aria-label", label);
+
+  let selectedValue = value;
+
+  const updateChoices = () => {
+    choices.querySelectorAll("button").forEach((button) => {
+      const choiceValue = Number(button.dataset.value || 0);
+      const selected = choiceValue <= selectedValue;
+      button.classList.toggle("is-selected", selected);
+      button.setAttribute("aria-checked", choiceValue === selectedValue ? "true" : "false");
+    });
+  };
+
+  for (let index = 1; index <= 5; index += 1) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "library-completion-choice";
+    button.dataset.value = String(index);
+    button.textContent = symbol;
+    button.setAttribute("role", "radio");
+    button.setAttribute("aria-label", `${label}: ${index} of 5`);
+    button.addEventListener("click", () => {
+      selectedValue = selectedValue === index ? 0 : index;
+      group.dataset.value = String(selectedValue);
+      updateChoices();
+    });
+    choices.append(button);
+  }
+
+  group.dataset.value = String(selectedValue);
+  updateChoices();
+  group.append(legend, choices);
+  return group;
+}
+
+function ensureStoryCompletedDialog() {
+  let dialog = document.getElementById("library-story-completed-dialog");
+  if (dialog) return dialog;
+
+  dialog = document.createElement("dialog");
+  dialog.id = "library-story-completed-dialog";
+  dialog.className = "library-story-completed-dialog";
+  dialog.innerHTML = `
+    <form method="dialog" class="library-story-completed-shell">
+      <header class="library-story-completed-header">
+        <span class="library-story-completed-symbol" aria-hidden="true">✦</span>
+        <div>
+          <p class="section-label">The House noticed</p>
+          <h2>Story completed</h2>
+          <p>Another world has settled onto the shelves.</p>
+        </div>
+      </header>
+      <div class="library-story-completed-body"></div>
+      <p class="library-story-completed-note">Ratings are optional. The House can wait until the feeling settles.</p>
+      <footer class="library-story-completed-actions">
+        <button type="button" class="library-secondary-button" data-completion-skip>Skip for now</button>
+        <button type="button" class="library-primary-button" data-completion-finish>Finish story</button>
+      </footer>
+    </form>
+  `;
+
+  document.body.append(dialog);
+  return dialog;
+}
+
+function openStoryCompletedDialog(item) {
+  const dialog = ensureStoryCompletedDialog();
+  const body = dialog.querySelector(".library-story-completed-body");
+  const skipButton = dialog.querySelector("[data-completion-skip]");
+  const finishButton = dialog.querySelector("[data-completion-finish]");
+
+  if (!body || !skipButton || !finishButton) return;
+
+  body.replaceChildren();
+
+  const story = document.createElement("div");
+  story.className = "library-story-completed-story";
+
+  const title = document.createElement("strong");
+  title.textContent = item?.title || "This story";
+
+  const author = document.createElement("span");
+  author.textContent = item?.author || "Unknown author";
+
+  story.append(title, author);
+
+  const rating = createCompletionScale("Overall feeling", "★");
+  const spice = createCompletionScale("Spice level", "🌶️");
+
+  body.append(story, rating, spice);
+
+  const closeAndRefresh = async () => {
+    dialog.close();
+    await refreshLibraryViews();
+    await openStoryCard(item);
+  };
+
+  skipButton.onclick = closeAndRefresh;
+  finishButton.onclick = closeAndRefresh;
+
+  if (!dialog.open) dialog.showModal();
+}
+
 function closeStoryCard() {
   elements.storyDialog?.close();
 }
@@ -1109,10 +1209,9 @@ async function openStoryCard(item) {
   if (!elements.storyDialog.open) elements.storyDialog.showModal();
 
   try {
-    const [freshItem, sessions, logs, allTags] = await Promise.all([
+    const [freshItem, sessions, allTags] = await Promise.all([
       libraryService.getItem(item.id),
       libraryService.listSessions({ libraryItemId: item.id }),
-      libraryService.listLogs({ libraryItemId: item.id }),
       libraryService.listTags(),
     ]);
 
@@ -1150,6 +1249,129 @@ async function openStoryCard(item) {
     series.className = "library-detail-series";
     series.textContent = seriesLabel(currentItem);
     heading.append(eyebrow, title, author, series);
+
+    const canFinishStory = ["reading", "listening"].includes(currentItem.status);
+    if (canFinishStory) {
+      const finishStoryButton = document.createElement("button");
+      finishStoryButton.type = "button";
+      finishStoryButton.className = "library-primary-button";
+      finishStoryButton.textContent = "Finish story";
+      finishStoryButton.style.marginTop = ".65rem";
+
+      const finishStoryStatus = document.createElement("p");
+      finishStoryStatus.className = "library-action-status";
+      finishStoryStatus.setAttribute("aria-live", "polite");
+
+      finishStoryButton.addEventListener("click", async () => {
+        finishStoryButton.disabled = true;
+        finishStoryStatus.textContent = "Closing this story gently…";
+
+        try {
+          let updated = currentItem;
+
+          if (activeSession) {
+            const finishingPosition =
+              currentItem.totalUnits > 0
+                ? currentItem.totalUnits
+                : activeSession.currentUnit ?? currentItem.currentUnit ?? 0;
+
+            const sessionResult = await libraryService.finishSession(
+              activeSession.id,
+              finishingPosition,
+            );
+
+            updated = sessionResult.item || updated;
+          }
+
+          updated =
+            await libraryService.updateItem(
+              currentItem.id,
+              {
+                status: "finished",
+                ...(currentItem.totalUnits > 0
+                  ? { current_unit: currentItem.totalUnits }
+                  : {}),
+              },
+            ) || updated;
+
+          syncLocalItem(updated);
+          await refreshLibraryViews();
+          closeStoryCard();
+          openStoryCompletedDialog(updated || currentItem);
+        } catch (error) {
+          finishStoryStatus.textContent =
+            error instanceof Error
+              ? error.message
+              : "This story could not be finished.";
+          finishStoryButton.disabled = false;
+        }
+      });
+
+      heading.append(finishStoryButton, finishStoryStatus);
+    }
+
+    if (currentItem.status === "finished") {
+      const memoriesButton = document.createElement("button");
+      memoriesButton.type = "button";
+      memoriesButton.className = "library-primary-button";
+      memoriesButton.textContent = "Story memories";
+      memoriesButton.style.marginTop = ".65rem";
+      memoriesButton.addEventListener("click", () => {
+        closeStoryCard();
+        openStoryCompletedDialog(currentItem);
+      });
+      heading.append(memoriesButton);
+
+      const againButton = document.createElement("button");
+      againButton.type = "button";
+      againButton.className = "library-primary-button";
+      againButton.textContent =
+        getSessionMode(currentItem) === "listening"
+          ? "Listen again"
+          : "Read again";
+      againButton.style.marginTop = ".65rem";
+
+      const againStatus = document.createElement("p");
+      againStatus.className = "library-action-status";
+      againStatus.setAttribute("aria-live", "polite");
+
+      againButton.addEventListener("click", async () => {
+        againButton.disabled = true;
+        againStatus.textContent =
+          getSessionMode(currentItem) === "listening"
+            ? "Opening another listen…"
+            : "Opening another reading…";
+
+        try {
+          if (activeSession) {
+            await libraryService.finishSession(
+              activeSession.id,
+              activeSession.currentUnit ?? currentItem.currentUnit ?? 0,
+            );
+          }
+
+          await libraryService.startSession({
+            library_item_id: currentItem.id,
+            mode: getSessionMode(currentItem),
+            is_reread: true,
+            start_unit: 0,
+            current_unit: 0,
+          });
+
+          await refreshLibraryViews();
+          await openStoryCard(currentItem);
+        } catch (error) {
+          againStatus.textContent =
+            error instanceof Error
+              ? error.message
+              : "This story could not be opened again.";
+          againButton.disabled = false;
+        }
+      });
+
+      heading.append(againButton, againStatus);
+    }
+
     hero.append(heading);
 
     const tagsCard = createStoryTagsCard(
@@ -1279,95 +1501,6 @@ async function openStoryCard(item) {
 
     seriesCard.append(seriesForm);
 
-    const progressCard = createStoryActionCard("Current position", "Set where you are now without adding anything to Reading history.");
-    const progressForm = document.createElement("form");
-    progressForm.className = "library-inline-form library-progress-form";
-    progressForm.innerHTML = isTimedItem(currentItem)
-      ? `
-        <div class="library-time-field">
-          <span>Current position</span>
-          ${createTimeFields("current", currentItem.currentUnit)}
-        </div>
-        <div class="library-time-field">
-          <span>Total duration</span>
-          ${createTimeFields("total", currentItem.totalUnits)}
-        </div>
-        <button type="submit" class="library-primary-button">Set current position</button>
-        <p class="library-action-status" aria-live="polite"></p>
-      `
-      : `
-        <label>
-          <span>Current page</span>
-          <input type="number" name="current_unit" min="0" ${currentItem.totalUnits ? `max="${currentItem.totalUnits}"` : ""} value="${currentItem.currentUnit || 0}" required>
-        </label>
-        <label>
-          <span>Total pages</span>
-          <input type="number" name="total_units" min="0" value="${currentItem.totalUnits || 0}">
-        </label>
-        <button type="submit" class="library-primary-button">Set current position</button>
-        <p class="library-action-status" aria-live="polite"></p>
-      `;
-    progressForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const data = new FormData(progressForm);
-      const status = progressForm.querySelector(".library-action-status");
-      const submit = progressForm.querySelector('button[type="submit"]');
-      status.textContent = "Updating your place…";
-      submit.disabled = true;
-      try {
-        const currentUnit =
-          isTimedItem(currentItem)
-            ? readTimeFromForm(
-                data,
-                "current",
-              )
-            : Number(
-                data.get("current_unit") ||
-                0,
-              );
-
-        const totalUnits =
-          isTimedItem(currentItem)
-            ? readTimeFromForm(
-                data,
-                "total",
-              )
-            : Number(
-                data.get("total_units") ||
-                0,
-              );
-
-        let updated = await libraryService.updateItem(
-          currentItem.id,
-          {
-            current_unit: currentUnit,
-            total_units: totalUnits,
-          },
-        );
-
-        if (activeSession) {
-          const sessionResult =
-            await libraryService.updateSession(
-              activeSession.id,
-              {
-                action: "update",
-                current_unit: currentUnit,
-              },
-            );
-
-          updated = sessionResult.item || updated;
-        }
-
-        syncLocalItem(updated);
-        await refreshLibraryViews();
-        await openStoryCard(updated || currentItem);
-      } catch (error) {
-        status.textContent = error instanceof Error ? error.message : "Progress could not be updated.";
-        submit.disabled = false;
-      }
-    });
-    progressCard.append(progressForm);
-
     const statusCard = createStoryActionCard("Status", "Tell the Library where this story belongs now.");
     const statusForm = document.createElement("form");
     statusForm.className = "library-inline-form library-status-form";
@@ -1391,15 +1524,66 @@ async function openStoryCard(item) {
     statusForm.append(statusSelect, statusButton, statusMessage);
     statusForm.addEventListener("submit", async (event) => {
       event.preventDefault();
-      statusMessage.textContent = "Moving this story…";
+      const nextStatus = statusSelect.value;
+      statusMessage.textContent =
+        nextStatus === "finished"
+          ? "Closing this story gently…"
+          : "Moving this story…";
       statusButton.disabled = true;
+
       try {
-        const updated = await libraryService.updateItem(currentItem.id, { status: statusSelect.value });
+        let updated = currentItem;
+
+        if (nextStatus === "finished" && activeSession) {
+          const finishingPosition =
+            currentItem.totalUnits > 0
+              ? currentItem.totalUnits
+              : activeSession.currentUnit ?? currentItem.currentUnit ?? 0;
+
+          const sessionResult =
+            await libraryService.finishSession(
+              activeSession.id,
+              finishingPosition,
+            );
+
+          updated =
+            sessionResult.item ||
+            updated;
+        }
+
+        updated =
+          await libraryService.updateItem(
+            currentItem.id,
+            {
+              status: nextStatus,
+              ...(nextStatus === "finished" && currentItem.totalUnits > 0
+                ? {
+                    current_unit:
+                      currentItem.totalUnits,
+                  }
+                : {}),
+            },
+          ) ||
+          updated;
+
         syncLocalItem(updated);
         await refreshLibraryViews();
-        await openStoryCard(updated || currentItem);
+
+        if (nextStatus === "finished") {
+          closeStoryCard();
+          openStoryCompletedDialog(
+            updated || currentItem,
+          );
+        } else {
+          await openStoryCard(
+            updated || currentItem,
+          );
+        }
       } catch (error) {
-        statusMessage.textContent = error instanceof Error ? error.message : "The status could not be changed.";
+        statusMessage.textContent =
+          error instanceof Error
+            ? error.message
+            : "The status could not be changed.";
         statusButton.disabled = false;
       }
     });
@@ -1409,7 +1593,7 @@ async function openStoryCard(item) {
       "Reading session",
       activeSession
         ? `Session ${activeSession.sessionNumber || ""} is active from ${formatItemPosition(currentItem, activeSession.currentUnit ?? currentItem.currentUnit, isTimedItem(currentItem))}.`
-        : "Start a session before keeping reading logs."
+        : "Start a session for this reading period."
     );
     const sessionActions = document.createElement("div");
     sessionActions.className = "library-session-actions";
@@ -1458,133 +1642,6 @@ async function openStoryCard(item) {
     }
     sessionCard.append(sessionActions);
 
-    const logCard = createStoryActionCard("Add reading log", "Save what you read and the thought that came with it.");
-    logCard.classList.add(
-      "library-story-log-card",
-    );
-    const logForm = document.createElement("form");
-    logForm.className = "library-log-form";
-    const today = new Date().toISOString().slice(0, 10);
-    const startValue = activeSession?.currentUnit ?? currentItem.currentUnit ?? 0;
-    logForm.innerHTML = `
-      <div class="library-log-fields-row">
-        <label><span>Date</span><input type="date" name="date" value="${today}" required></label>
-        ${
-          isTimedItem(currentItem)
-            ? `
-              <div class="library-time-field">
-                <span>From</span>
-                ${createTimeFields("start", startValue)}
-              </div>
-              <div class="library-time-field">
-                <span>To</span>
-                ${createTimeFields("end", startValue)}
-              </div>
-            `
-            : `
-              <label><span>From page</span><input type="number" name="start_unit" min="0" value="${startValue}" required></label>
-              <label><span>To page</span><input type="number" name="end_unit" min="0" value="${startValue}" required></label>
-            `
-        }
-      </div>
-      <label><span>Place</span><input type="text" name="place" placeholder="At home, on the train…"></label>
-      <label><span>Reading note</span><textarea name="note" rows="3" placeholder="What stayed with you?"></textarea></label>
-      <label><span>Words</span><input type="text" name="words" placeholder="Separate words with commas"></label>
-      <button type="submit" class="library-primary-button">Keep reading log</button>
-      <p class="library-action-status" aria-live="polite"></p>
-    `;
-    if (!activeSession) {
-      const hint = document.createElement("p");
-      hint.className = "library-action-hint";
-      hint.textContent = "The Library will start a reading session automatically when this log is saved.";
-      logForm.prepend(hint);
-    }
-    logForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const data = new FormData(logForm);
-      const status = logForm.querySelector(".library-action-status");
-      const submit = logForm.querySelector('button[type="submit"]');
-      status.textContent = "Keeping this reading…";
-      submit.disabled = true;
-      try {
-        let session = activeSession;
-        if (!session) {
-          const started = await libraryService.startSession({
-            library_item_id: currentItem.id,
-            mode: getSessionMode(currentItem),
-            is_reread: false,
-            start_unit:
-              isTimedItem(currentItem)
-                ? readTimeFromForm(
-                    data,
-                    "start",
-                  )
-                : Number(
-                    data.get("start_unit") ||
-                    currentItem.currentUnit ||
-                    0,
-                  ),
-            current_unit:
-              isTimedItem(currentItem)
-                ? readTimeFromForm(
-                    data,
-                    "start",
-                  )
-                : Number(
-                    data.get("start_unit") ||
-                    currentItem.currentUnit ||
-                    0,
-                  ),
-          });
-          session = started.session;
-        }
-
-        const words = String(data.get("words") || "")
-          .split(",")
-          .map((word) => word.trim())
-          .filter(Boolean)
-          .map((word) => ({ word }));
-
-        const result = await libraryService.createLog({
-          library_item_id: currentItem.id,
-          reading_session_id: session.id,
-          date: data.get("date"),
-          start_unit:
-            isTimedItem(currentItem)
-              ? readTimeFromForm(
-                  data,
-                  "start",
-                )
-              : Number(
-                  data.get("start_unit") ||
-                  0,
-                ),
-          end_unit:
-            isTimedItem(currentItem)
-              ? readTimeFromForm(
-                  data,
-                  "end",
-                )
-              : Number(
-                  data.get("end_unit") ||
-                  0,
-                ),
-          place: data.get("place"),
-          note: data.get("note"),
-          words,
-        });
-        syncLocalItem(result.item);
-        await refreshLibraryViews();
-        await openStoryCard(result.item || currentItem);
-      } catch (error) {
-        status.textContent = error instanceof Error ? error.message : "This reading log could not be saved.";
-        submit.disabled = false;
-      }
-    });
-    logCard.append(logForm);
-
-    actions.append(seriesCard, progressCard, statusCard, sessionCard, logCard);
-
     const danger = document.createElement("section");
     danger.className = "library-story-danger-zone";
 
@@ -1593,8 +1650,8 @@ async function openStoryCard(item) {
     dangerTitle.textContent = "Remove from the Library";
     const dangerDescription = document.createElement("p");
     dangerDescription.textContent =
-      sessions.length || logs.length
-        ? "This permanently deletes the story and all of its reading history."
+      sessions.length
+        ? "This permanently deletes the story and its reading sessions."
         : "Delete this test or accidental entry permanently.";
 
     dangerText.append(
@@ -1613,8 +1670,7 @@ async function openStoryCard(item) {
 
     deleteButton.addEventListener("click", async () => {
       const hasHistory =
-        sessions.length > 0 ||
-        logs.length > 0;
+        sessions.length > 0;
 
       const confirmed = window.confirm(
         hasHistory
@@ -1626,7 +1682,7 @@ async function openStoryCard(item) {
 
       if (hasHistory) {
         const confirmedAgain = window.confirm(
-          "This will permanently remove reading sessions, reading logs and Dictionary contexts for this story. Delete it anyway?",
+          "This will permanently remove the reading sessions for this story. Delete it anyway?",
         );
 
         if (!confirmedAgain) return;
@@ -1654,91 +1710,7 @@ async function openStoryCard(item) {
       deleteStatus,
     );
 
-    const facts = document.createElement("dl");
-    facts.className = "library-detail-list";
-    facts.append(
-      detailRow(
-        "Progress",
-        isTimedItem(currentItem)
-          ? `${formatDurationBrief(currentItem.currentUnit)} of ${currentItem.totalUnits ? formatDurationBrief(currentItem.totalUnits) : "?"}`
-          : `${currentItem.currentUnit} of ${currentItem.totalUnits || "?"} pages`,
-      ),
-      detailRow("Sessions", String(sessions.length)),
-      detailRow("Reading logs", String(logs.length)),
-      detailRow("Notes", currentItem.notes || "No notes kept yet."),
-    );
-
-    const history = document.createElement("section");
-    history.className = "library-detail-section";
-    const historyTitle = document.createElement("h3");
-    historyTitle.textContent = "Reading history";
-    history.append(historyTitle);
-
-    if (!logs.length) {
-      const empty = document.createElement("p");
-      empty.className = "library-detail-muted";
-      empty.textContent = "No reading logs yet.";
-      history.append(empty);
-    } else {
-      const list = document.createElement("div");
-      list.className = "library-log-list";
-      logs.slice().reverse().forEach((log) => {
-        const entry = document.createElement("article");
-        entry.className = "library-log-card";
-        const head = document.createElement("strong");
-        head.textContent = isTimedItem(currentItem)
-          ? `${formatDate(log.date)} · ${formatClock(log.startUnit)} → ${formatClock(log.endUnit)}`
-          : `${formatDate(log.date)} · ${log.startUnit}–${log.endUnit} pages`;
-        const meta = document.createElement("p");
-        meta.textContent = log.place || "Place not recorded";
-        const note = document.createElement("p");
-        note.textContent = log.note || "No note for this reading.";
-
-        const logActions = document.createElement("div");
-        logActions.className = "library-log-card-actions";
-
-        const deleteLogButton = document.createElement("button");
-        deleteLogButton.type = "button";
-        deleteLogButton.className = "library-log-delete-button";
-        deleteLogButton.textContent = "Delete log";
-
-        const logStatus = document.createElement("span");
-        logStatus.className = "library-action-status";
-        logStatus.setAttribute("aria-live", "polite");
-
-        deleteLogButton.addEventListener("click", async () => {
-          const confirmed = window.confirm(
-            isTimedItem(currentItem)
-                  ? `Delete the listening log for ${formatDate(log.date)} (${formatClock(log.startUnit)} → ${formatClock(log.endUnit)})?`
-                  : `Delete the reading log for ${formatDate(log.date)} (${log.startUnit}–${log.endUnit})?`,
-          );
-
-          if (!confirmed) return;
-
-          deleteLogButton.disabled = true;
-          logStatus.textContent = "Removing this log…";
-
-          try {
-            await libraryService.deleteLog(log.id);
-            await refreshLibraryViews();
-            await openStoryCard(currentItem);
-          } catch (error) {
-            logStatus.textContent =
-              error instanceof Error
-                ? error.message
-                : "This reading log could not be removed.";
-            deleteLogButton.disabled = false;
-          }
-        });
-
-        logActions.append(deleteLogButton, logStatus);
-        entry.append(head, meta, note, logActions);
-        list.append(entry);
-      });
-      history.append(list);
-    }
-
-    wrapper.append(hero, tagsCard, actions, facts, history, danger);
+    wrapper.append(hero, tagsCard, danger);
     elements.storyDialogBody.replaceChildren(wrapper);
   } catch (error) {
     elements.storyDialogBody.textContent = error instanceof Error ? error.message : "This story could not be opened.";
@@ -2215,12 +2187,12 @@ function createStoryActionCard(title, description) {
 }
 
 function getSessionMode(item) {
-  return item.type === "audiobook" || item.type === "podcast" ? "listening" : "reading";
+  return item.type === "audiobook" ? "listening" : "reading";
 }
 
 function getStatusOptions(item) {
-  const activeLabel = item.type === "audiobook" || item.type === "podcast" ? "Listening" : "Reading";
-  const activeValue = item.type === "audiobook" || item.type === "podcast" ? "listening" : "reading";
+  const activeLabel = item.type === "audiobook" ? "Listening" : "Reading";
+  const activeValue = item.type === "audiobook" ? "listening" : "reading";
   return [
     ["want_to_read", "Want to read"],
     [activeValue, activeLabel],
@@ -2241,7 +2213,7 @@ async function refreshLibraryViews() {
     libraryService.listItems(),
     libraryService.getDictionary(),
   ]);
-  state.items = Array.isArray(items) ? items : state.items;
+  state.items = Array.isArray(items) ? items.filter((item) => !["manga", "podcast"].includes(item.type)) : state.items;
   state.dictionary = Array.isArray(dictionary) ? dictionary : state.dictionary;
   renderCurrent();
   renderBooks();
@@ -2404,7 +2376,7 @@ async function loadLibrary() {
       libraryService.getDictionary(),
       libraryService.listTags(),
     ]);
-    state.items = Array.isArray(items) ? items : [];
+    state.items = Array.isArray(items) ? items.filter((item) => !["manga", "podcast"].includes(item.type)) : [];
     state.lists = Array.isArray(lists) ? lists : [];
     state.dictionary = Array.isArray(dictionary) ? dictionary : [];
     state.tags = Array.isArray(tags) ? tags : [];
@@ -2557,33 +2529,20 @@ function renderAddStoryTagsField() {
 function syncAddStoryUnitFields() {
   if (!elements.form) return;
 
-  const type =
-    elements.form.elements.type?.value;
+  const typeSelect = elements.form.elements.type;
+  if (typeSelect) {
+    Array.from(typeSelect.options).forEach((option) => {
+      if (["manga", "podcast"].includes(option.value)) option.remove();
+    });
+    if (!["book", "audiobook"].includes(typeSelect.value)) typeSelect.value = "book";
+  }
 
-  const timed =
-    isTimedItem(type);
-
-  const pageTotal =
-    elements.form.querySelector(
-      ".library-page-total-field",
-    );
-  const pageCurrent =
-    elements.form.querySelector(
-      ".library-page-current-field",
-    );
-  const timeTotal =
-    elements.form.querySelector(
-      ".library-time-total-field",
-    );
-  const timeCurrent =
-    elements.form.querySelector(
-      ".library-time-current-field",
-    );
-
-  if (pageTotal) pageTotal.hidden = timed;
-  if (pageCurrent) pageCurrent.hidden = timed;
-  if (timeTotal) timeTotal.hidden = !timed;
-  if (timeCurrent) timeCurrent.hidden = !timed;
+  [
+    ".library-page-total-field",
+    ".library-page-current-field",
+    ".library-time-total-field",
+    ".library-time-current-field",
+  ].forEach((selector) => elements.form.querySelector(selector)?.remove());
 }
 
 function syncAddStorySeriesFields() {
@@ -2647,28 +2606,8 @@ async function submitItem(event) {
     const createdItem = await libraryService.createItem({
       type: data.get("type"), title: data.get("title"), author: data.get("author"),
       status: data.get("status"), cover_url: data.get("cover_url"),
-      total_units:
-        isTimedItem(data.get("type"))
-          ? timePartsToSeconds(
-              data.get("total_hours"),
-              data.get("total_minutes"),
-              data.get("total_seconds"),
-            )
-          : Number(
-              data.get("total_units") ||
-              0,
-            ),
-      current_unit:
-        isTimedItem(data.get("type"))
-          ? timePartsToSeconds(
-              data.get("current_hours"),
-              data.get("current_minutes"),
-              data.get("current_seconds"),
-            )
-          : Number(
-              data.get("current_unit") ||
-              0,
-            ),
+      total_units: 0,
+      current_unit: 0,
       notes: data.get("notes"),
       series_name:
         data.get("series_mode") === "series"

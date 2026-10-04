@@ -364,3 +364,80 @@
 .navigation-menu::after {
   color: #5b4a56;
 }
+
+
+/* ---------------------------------
+   HOME WELCOME BAR NAVIGATION
+   Navigation now lives inside .home-voice.
+---------------------------------- */
+
+.home-voice {
+  position: relative;
+  z-index: 200;
+  overflow: visible;
+  isolation: isolate;
+}
+
+.home-voice .home-navigation {
+  position: relative;
+  z-index: 220;
+
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  flex: 0 0 auto;
+}
+
+.home-voice .navigation-button {
+  position: relative;
+  top: auto;
+  left: auto;
+
+  flex: 0 0 auto;
+}
+
+.home-voice .home-button {
+  position: relative;
+
+  flex: 0 0 auto;
+}
+
+.home-voice .navigation-menu {
+  z-index: 230;
+  top: calc(100% + 10px);
+  left: 0;
+}
+
+/* ---------------------------------
+   LIBRARY INTRO NAVIGATION
+   Keep room navigation compact without
+   pushing the Library message away.
+---------------------------------- */
+
+#library-room .library-intro {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+}
+
+#library-room .library-intro .home-navigation {
+  flex: 0 0 auto;
+}
+
+#library-room .library-intro .home-symbol {
+  flex: 0 0 auto;
+}
+
+#library-room .library-intro .home-message {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+}
+
+#library-room .library-intro .home-message p,
+#library-room .library-intro .home-message h2 {
+  max-width: none;
+}
+
